@@ -9,7 +9,7 @@ class Node():
     nodes = []
 
     def __init__(self, xy, av_dirs):
-        self.xy = xy #XYPos - Used when drawing solution
+        self.x, self.y = xy #XYPos - Used when drawing solution
         self.av_dirs = av_dirs # Avaliable Directions - Determine if others are nodes
         self.connections = []
         Node.nodes.append(self)
@@ -44,7 +44,27 @@ def get_av_dirs(img, xy):
 
     return av_dirs
 
-def node(img, xy):
+def is_conn(img, node, node_):
+
+    if (node.x, node.y) == (node_.x, node_.y):
+        return False #Same node
+
+
+    if node.x == node_.x:
+        for y in range(min(node.y, node_.y), max(node.y, node_.y)):
+            if img[y][node.x] == (0, 0, 0):
+                return False
+
+        return True
+
+    if node.y == node_.y:
+        for x in range(min(node.x, node_.x), max(node.x, node_.x)):
+            if img[node.y][x] == (0, 0, 0):
+                return False
+
+        return True
+
+def is_node(img, xy):
     x,y = xy
     if img[y][x] == (255, 255, 255):
 
@@ -58,22 +78,18 @@ def node(img, xy):
                 if x > 0 and img[y][x-1] == (255, 255, 255):
                     if not get_av_dirs(img, (x-1, y))[i]:
                         if av_dirs != get_av_dirs(img, (x+1, y)):
-                            print(av_dirs, get_av_dirs(img, (x-1, y)), xy, 'l', i)
                             return True
                 if x < len(img[0]) - 2 and img[y][x+1] == (255, 255, 255):
                     if not get_av_dirs(img, (x+1,y ))[i]:
                         if av_dirs != get_av_dirs(img, (x-1, y)):
-                            print(av_dirs, get_av_dirs(img, (x+1, y)), xy, 'r')
                             return True
                 if y > 0 and img[y-1][x] == (255, 255, 255):
                     if not get_av_dirs(img, (x, y-1))[i]:
                         if av_dirs != get_av_dirs(img, (x, y+1)):
-                            print(av_dirs, get_av_dirs(img, (x, y-1)), xy, 'u')
                             return True
                 if y < len(img) - 2 and img[y+1][x] == (255, 255, 255):
                     if not get_av_dirs(img, (x, y+1))[i]:
                         if av_dirs != get_av_dirs(img, (x, y-1)):
-                            print(av_dirs, get_av_dirs(img, (x, y+1)), xy, 'd')
                             return True
 
 def parse(img_path):
@@ -87,12 +103,27 @@ def parse(img_path):
 
     for y, row in enumerate(pxs):
         for x, px in enumerate(row):
-            if node(pxs, (x, y)):
+            if is_node(pxs, (x, y)):
                 Node(
                     (x, y),
                     get_av_dirs(pxs, (x, y))
                 )
 
-    return Graph(Node.nodes, []) # TODO: Add Connection parsing
+    for i, node in enumerate(Node.nodes):
+        for i_, node_ in enumerate(Node.nodes):
+            if is_conn(pxs, node, node_):
+                new_conn = Connection(
+                    (node, node_),
+                    abs(node.x - node_.x))
 
-g=parse('imgs/1010.png')
+                node.connections.append(new_conn)
+
+                for connection in connections:
+                    if connection.nodes == new_conn.nodes[::-1]:
+                        break
+
+                else:
+                    connections.append(new_conn)
+
+
+    return Graph(Node.nodes, connections)
