@@ -1,17 +1,16 @@
-def random(graph):
+import random
 
-    #Returns list of nodes, list of connections
+def random_move(graph):
 
-    nodes = [graph.start]
+    curr_node = graph.start
     conns = []
 
-    while nodes[-1] != graph.end:
-        conns.append(random.choice(node.connections))
-        if conns[-1].nodes[0] == graph.nodes[-1]:
-            nodes.append(conns[-1].nodes[1])
+    while curr_node != graph.end:
+        conns.append(random.choice(curr_node.connections))
+        if conns[-1].nodes[0] == curr_node:
+            curr_node = conns[-1].nodes[1]
 
-        elif conns[-1].nodes[1] == graph.nodes[-1]:
-            nodes.append(conns[-1].nodes[1])
+        elif conns[-1].nodes[1] == curr_node:
+            curr_node = conns[-1].nodes[0]
 
-    return (nodes, conns)
-
+    return conns
