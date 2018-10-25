@@ -2,8 +2,6 @@
 
 from PIL import Image
 
-# TODO: Only create node when there is a new direction rhat previously wasnt present
-
 class Node():
 
     nodes = []
@@ -34,7 +32,6 @@ class Graph():
                 self.end = node
                 break
 
-        print(self.start, self.end)
         if not self.start:
             raise AttributeError("Start node not found")
 
