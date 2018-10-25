@@ -20,9 +20,26 @@ class Connection():
         self.weight = weight
 
 class Graph():
-    def __init__(self, nodes, connections):
+    def __init__(self, img, nodes, connections):
+        self.img = img
         self.nodes = nodes
         self.connections = connections
+        self.start, self.end = (False, False)
+        for node in self.nodes:
+            if node.y == 0:
+                self.start = node
+                continue
+
+            if node.y == len(self.img) - 1:
+                self.end = node
+                break
+
+        print(self.start, self.end)
+        if not self.start:
+            raise AttributeError("Start node not found")
+
+        if not self.end:
+            raise AttributeError("End node not found")
 
 def get_av_dirs(img, xy):
     x,y = xy
@@ -126,4 +143,4 @@ def parse(img_path):
                     connections.append(new_conn)
 
 
-    return Graph(Node.nodes, connections)
+    return Graph(pxs, Node.nodes, connections)
