@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import img_parse
+import img
 import solve
 
 import sys
@@ -27,7 +27,24 @@ def parse_args():
                 parsed['d'] = args.d
             else:
                 parsed['d'] = 'dlur'
+
+        elif args.a == 'random_move':
+            parsed['a'] = args.a
     else:
         raise ValueError('Algorithm Required')
 
     return parsed
+
+def __main__():
+    parsed = parse_args()
+    maze = img.parse(parsed['m'])
+    if parsed['a'] == 'random_move':
+        solved = solve.random_move(maze)
+
+    elif parsed['a'] == 'dir_pri':
+        solved = solve.dir_pri(maze, parsed['d'])
+
+    print(solved)
+
+if __name__ == '__main__':
+    __main__()
