@@ -27,6 +27,7 @@ def dir_pri(graph, pri='ldru'): #Pri - Str some permutation of udlr (Up, Down, L
     prev_dir = 'u'
 
     def expand_node(node, prev_dir):
+
         for dir in pri.replace(prev_dir, ''):
             for conn in node.connections:
                 if dir == 'u':
@@ -72,5 +73,5 @@ def dir_pri(graph, pri='ldru'): #Pri - Str some permutation of udlr (Up, Down, L
 
         curr_node = expanded[0]
         conns.append(expanded[1])
-        
+
     return conns

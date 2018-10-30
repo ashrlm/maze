@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from PIL import Image
+import os
 
 class Node():
 
@@ -143,6 +144,9 @@ def parse(img_path):
     return Graph(pxs, Node.nodes, connections)
 
 def write_solution(conns, img_path):
+
+    # TODO: Make it so that runs that we saw previously are recolored white
+
     img = Image.open(img_path)
     w, h = img.size
 
@@ -151,23 +155,20 @@ def write_solution(conns, img_path):
 
     for conn in conns:
         if conn.nodes[0].x == conn.nodes[1].x:
-            for y in range(conn.nodes[0].y, conn.nodes[1].y):
-                pxs[y][conn.nodes[0].x] = (0, 0, 255)
-                print(conn.nodes[0].x, y)
-                print(pxs[y][conn.nodes[0].x])
+            for y in range(min(conn.nodes[0].y, conn.nodes[1].y), max(conn.nodes[0].y, conn.nodes[1].y) + 1):
+                if pxs[y][conn.nodes[0].x] == (255, 255, 255):
+                    pxs[y][conn.nodes[0].x] = (0, 0, 255)
 
         elif conn.nodes[0].y == conn.nodes[1].y:
-            for x in range(conn.nodes[0].x, conn.nodes[1].x):
-                print(x, conn.nodes[0].y)
-                pxs[conn.nodes[0].y][x] = (0, 0, 255)
-                print(pxs[conn.nodes[0].y][x])
+            for x in range(min(conn.nodes[0].x, conn.nodes[1].x), max(conn.nodes[0].x, conn.nodes[1].x) + 1):
+                if pxs[conn.nodes[0].y][x] == (255, 255, 255):
+                    pxs[conn.nodes[0].y][x] = (0, 0, 255)
 
     new_pxs = []
     for y in pxs:
         for tup in y:
             new_pxs.append(tup)
-            print(tup)
 
     img_out = Image.new(img.mode, img.size)
     img_out.putdata(new_pxs)
-    img_out.save('solved.png')
+    img_out.save('imgs/solved' + img_path[img_path.index('/'):])

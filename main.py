@@ -44,7 +44,6 @@ def __main__():
     elif parsed['a'] == 'dir_pri':
         solved = solve.dir_pri(maze, parsed['d'])
 
-    print(parsed['m'])
     img.write_solution(solved, parsed['m'])
 
 if __name__ == '__main__':
