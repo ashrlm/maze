@@ -141,3 +141,33 @@ def parse(img_path):
 
 
     return Graph(pxs, Node.nodes, connections)
+
+def write_solution(conns, img_path):
+    img = Image.open(img_path)
+    w, h = img.size
+
+    pxs = list(img.getdata())
+    pxs = [pxs[i:i + w] for i in range(0, len(pxs), w)] #Split list into nested lists
+
+    for conn in conns:
+        if conn.nodes[0].x == conn.nodes[1].x:
+            for y in range(conn.nodes[0].y, conn.nodes[1].y):
+                pxs[y][conn.nodes[0].x] = (0, 0, 255)
+                print(conn.nodes[0].x, y)
+                print(pxs[y][conn.nodes[0].x])
+
+        elif conn.nodes[0].y == conn.nodes[1].y:
+            for x in range(conn.nodes[0].x, conn.nodes[1].x):
+                print(x, conn.nodes[0].y)
+                pxs[conn.nodes[0].y][x] = (0, 0, 255)
+                print(pxs[conn.nodes[0].y][x])
+
+    new_pxs = []
+    for y in pxs:
+        for tup in y:
+            new_pxs.append(tup)
+            print(tup)
+
+    img_out = Image.new(img.mode, img.size)
+    img_out.putdata(new_pxs)
+    img_out.save('solved.png')
