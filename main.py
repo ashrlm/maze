@@ -28,8 +28,6 @@ def parse_args():
             else:
                 parsed['d'] = 'dlur'
 
-        elif args.a == 'random_move':
-            parsed['a'] = args.a
     else:
         raise ValueError('Algorithm Required')
 
@@ -44,7 +42,10 @@ def __main__():
     elif parsed['a'] == 'dir_pri':
         solved = solve.dir_pri(maze, parsed['d'])
 
-    img.write_solution(solved, parsed['m'])
+    elif parsed['a'] == 'dfs':
+        solved = solve.dfs(maze)
+
+    img.write_solution(solved, parsed['m'], maze)
 
 if __name__ == '__main__':
     __main__()
