@@ -143,9 +143,7 @@ def parse(img_path):
 
     return Graph(pxs, Node.nodes, connections)
 
-def write_solution(conns, img_path):
-
-    # TODO: Make it so that runs that we saw previously are recolored white
+def write_solution(conns, img_path, graph):
 
     img = Image.open(img_path)
     w, h = img.size
@@ -154,15 +152,21 @@ def write_solution(conns, img_path):
     pxs = [pxs[i:i + w] for i in range(0, len(pxs), w)] #Split list into nested lists
 
     for conn in conns:
+
         if conn.nodes[0].x == conn.nodes[1].x:
-            for y in range(min(conn.nodes[0].y, conn.nodes[1].y), max(conn.nodes[0].y, conn.nodes[1].y) + 1):
+            for y in range(min(conn.nodes[0].y, conn.nodes[1].y) - 1, max(conn.nodes[0].y, conn.nodes[1].y) + 1):
                 if pxs[y][conn.nodes[0].x] == (255, 255, 255):
                     pxs[y][conn.nodes[0].x] = (0, 0, 255)
 
+
         elif conn.nodes[0].y == conn.nodes[1].y:
-            for x in range(min(conn.nodes[0].x, conn.nodes[1].x), max(conn.nodes[0].x, conn.nodes[1].x) + 1):
+            for x in range(min(conn.nodes[0].x, conn.nodes[1].x) - 1, max(conn.nodes[0].x, conn.nodes[1].x) + 1):
                 if pxs[conn.nodes[0].y][x] == (255, 255, 255):
                     pxs[conn.nodes[0].y][x] = (0, 0, 255)
+
+    for y in range(min(conns[-1].nodes[0].y, graph.end.y), max(conns[-1].nodes.y, graph.end.y)):
+        pxs[y][conns[-1].nodes[0].x] = (0, 0, 255) #Write path to end node
+
 
     new_pxs = []
     for y in pxs:
