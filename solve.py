@@ -92,8 +92,11 @@ def dfs(graph):
                 list(node_conns.keys())[-1].avaliable.remove(conn)
 
         if list(node_conns.keys())[-1].avaliable == []:
+            try:
+                list(node_conns.keys())[-2].avaliable.remove(list(node_conns.values())[-1])
+            except ValueError:
+                pass
             del node_conns[list(node_conns.keys())[-1]]
-            # BUG: Infinite Loop - Fix by removal of this node from parent.avaliable
             continue
 
         next_conn = random.choice(list(node_conns.keys())[-1].avaliable)
