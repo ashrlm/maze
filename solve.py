@@ -83,16 +83,20 @@ def dfs(graph):
     # Format for above - {Node, Conn leading to node}
 
     while list(node_conns.keys())[-1] != graph.end:
-        avaliable = list(node_conns.keys())[-1].connections
-        for conn in avaliable: #Filter out ones we've already been to
-            if conn in list(node_conns.values()):
-                avaliable.remove(conn)
 
-        if avaliable == []:
+        if not hasattr(list(node_conns.keys())[-1], 'avaliable'):
+            list(node_conns.keys())[-1].avaliable = list(node_conns.keys())[-1].connections
+
+        for conn in list(node_conns.keys())[-1].avaliable: #Filter out ones we've already been to
+            if conn in list(node_conns.values()):
+                list(node_conns.keys())[-1].avaliable.remove(conn)
+
+        if list(node_conns.keys())[-1].avaliable == []:
             del node_conns[list(node_conns.keys())[-1]]
+            # BUG: Infinite Loop - Fix by removal of this node from parent.avaliable
             continue
 
-        next_conn = random.choice(list(node_conns.keys())[-1].connections)
+        next_conn = random.choice(list(node_conns.keys())[-1].avaliable)
         node_conns[conn_node(next_conn, list(node_conns.keys())[-1])] = next_conn #Get next node, add to dict with val of next_conn
 
     return list(node_conns.values()) #Only return connections
