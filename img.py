@@ -165,7 +165,7 @@ def write_solution(conns, img_path, graph):
                     pxs[conn.nodes[0].y][x] = (0, 0, 255)
 
     for y in range(min(conns[-1].nodes[0].y, graph.end.y), max(conns[-1].nodes.y, graph.end.y)):
-        pxs[y][conns[-1].nodes[0].x] = (0, 0, 255) #Write path to end node
+        pxs[y][conns[-1].nodes[0].x] = (0, 0, 255) #Write to end node
 
 
     new_pxs = []
