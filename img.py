@@ -108,6 +108,7 @@ def is_node(img, xy):
                             return True
 
 def parse(img_path):
+
     img = Image.open(img_path)
     w, h = img.size
 
@@ -161,10 +162,10 @@ def write_solution(conns, img_path, graph):
 
         elif conn.nodes[0].y == conn.nodes[1].y:
             for x in range(min(conn.nodes[0].x, conn.nodes[1].x) - 1, max(conn.nodes[0].x, conn.nodes[1].x) + 1):
-                if pxs[conn.nodes[0].y][x] == (255, 255, 255):
+                if pxs[conn.nodes[1].y][x] == (255, 255, 255):
                     pxs[conn.nodes[0].y][x] = (0, 0, 255)
 
-    for y in range(min(conns[-1].nodes[0].y, graph.end.y), max(conns[-1].nodes.y, graph.end.y)):
+    for y in range(min(conns[-1].nodes[0].y, graph.end.y), max(conns[-1].nodes[0].y, graph.end.y)):
         pxs[y][conns[-1].nodes[0].x] = (0, 0, 255) #Write to end node
 
 
