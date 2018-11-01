@@ -177,3 +177,4 @@ def write_solution(conns, img_path, graph):
     img_out = Image.new(img.mode, img.size)
     img_out.putdata(new_pxs)
     img_out.save('imgs/solved' + img_path[img_path.index('/'):])
+    img_out.show()
