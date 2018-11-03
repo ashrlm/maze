@@ -89,7 +89,7 @@ def is_node(img, xy):
         av_dirs = get_av_dirs(img, xy)
 
         for i, dir in enumerate(av_dirs):
-            if dir: # TODO: Code to check that node we gained direction from is not a node itself
+            if dir:
                 if x > 0 and img[y][x-1] == (255, 255, 255):
                     if not get_av_dirs(img, (x-1, y))[i]:
                         if av_dirs != get_av_dirs(img, (x+1, y)):
@@ -152,20 +152,17 @@ def write_solution(conns, img_path, graph):
     pxs = list(img.getdata())
     pxs = [pxs[i:i + w] for i in range(0, len(pxs), w)] #Split list into nested lists
 
-    for conn in conns:
+    for conn in conns[:-1]:
 
         if conn.nodes[0].x == conn.nodes[1].x:
-            for y in range(min(conn.nodes[0].y, conn.nodes[1].y) - 1, max(conn.nodes[0].y, conn.nodes[1].y) + 1):
-                if pxs[y][conn.nodes[0].x] == (255, 255, 255):
-                    pxs[y][conn.nodes[0].x] = (0, 0, 255)
-
+            for y in range(min(conn.nodes[0].y, conn.nodes[1].y), max(conn.nodes[0].y, conn.nodes[1].y) + 1):
+                pxs[y][conn.nodes[0].x] = (0, 0, 255)
 
         elif conn.nodes[0].y == conn.nodes[1].y:
-            for x in range(min(conn.nodes[0].x, conn.nodes[1].x) - 1, max(conn.nodes[0].x, conn.nodes[1].x) + 1):
-                if pxs[conn.nodes[1].y][x] == (255, 255, 255):
-                    pxs[conn.nodes[0].y][x] = (0, 0, 255)
+            for x in range(min(conn.nodes[0].x, conn.nodes[1].x), max(conn.nodes[0].x, conn.nodes[1].x) + 1):
+                pxs[conn.nodes[1].y][x] = (0, 0, 255)
 
-    for y in range(min(conns[-1].nodes[0].y, graph.end.y), max(conns[-1].nodes[0].y, graph.end.y)):
+    for y in range(min(conns[-1].nodes[0].y, graph.end.y), max(conns[-1].nodes[0].y, graph.end.y) + 1):
         pxs[y][conns[-1].nodes[0].x] = (0, 0, 255) #Write to end node
 
 

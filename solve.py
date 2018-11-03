@@ -79,6 +79,70 @@ def dir_pri(graph, pri='ldru'): #Pri - Str some permutation of udlr (Up, Down, L
 
 def dfs(graph):
 
+    def conn_filter(conns_old):
+        conns = list(conns_old) #Create copy for returning
+
+        for i, conn in enumerate(conns_old[:-1]): #Hacky Solution - Refactor if possible
+            if not (conn.nodes[0] in conns_old[i+1].nodes or conn.nodes[1] in conns_old[i+1].nodes): #Missing Connection
+                if conn.nodes[0].x == conns_old[i+1].nodes[0].x: #Same x - Missing Y CONN
+                    conns.append(Connection(
+                        (conn.nodes[0],
+                         conns_old[i+1].nodes[0]),
+                        abs(conn.nodes[0].y-conns_old[i+1].nodes[0].y)
+                    ))
+
+                elif conn.nodes[0].x == conns_old[i+1].nodes[1].x:
+                    conns.append(Connection(
+                        (conn.nodes[0],
+                         conns_old[i+1].nodes[1]),
+                        abs(conn.nodes[0].y-conns_old[i+1].nodes[1].y)
+                    ))
+
+                elif conn.nodes[1].x == conns_old[i+1].nodes[0].x:
+                    conns.append(Connection(
+                        (conn.nodes[1],
+                         conns_old[i+1].nodes[0]),
+                        abs(conn.nodes[1].y-conns_old[i+1].nodes[0].y)
+                    ))
+
+                elif conn.nodes[1].x == conns_old[i+1].nodes[1].x:
+                    conns.append(Connection(
+                        (conn.nodes[1],
+                         conns_old[i+1].nodes[1]),
+                        abs(conn.nodes[1].y-conns_old[i+1].nodes[1].y)
+                    ))
+
+                elif conn.nodes[0].y == conns_old[i+1].nodes[0].y:
+                    conns.append(Connection(
+                        (conn.nodes[0],
+                         conns_old[i+1].nodes[0]),
+                        abs(conn.nodes[0].x-conns_old[i+1].nodes[0].x)
+                    ))
+
+                elif conn.nodes[0].y == conns_old[i+1].nodes[1].y:
+                    conns.append(Connection(
+                        (conn.nodes[0],
+                         conns_old[i+1].nodes[1]),
+                        abs(conn.nodes[0].x-conns_old[i+1].nodes[1].x)
+                    ))
+
+                elif conn.nodes[1].y == conns_old[i+1].nodes[0].y:
+                    conns.append(Connection(
+                        (conn.nodes[1],
+                         conns_old[i+1].nodes[0]),
+                        abs(conn.nodes[1].x-conns_old[i+1].nodes[0].x)
+                    ))
+
+                elif conn.nodes[1].y == conns_old[i+1].nodes[1].y:
+                    conns.append(Connection(
+                        (conn.nodes[1],
+                         conns_old[i+1].nodes[1]),
+                        abs(conn.nodes[1].x-conns_old[i+1].nodes[1].x)
+                    ))
+
+        return conns
+
+
     node_conns = {graph.start: Connection((graph.start, graph.start), 0)}
     # Format for above - {Node, Conn leading to node}
 
@@ -102,4 +166,4 @@ def dfs(graph):
         next_conn = random.choice(list(node_conns.keys())[-1].avaliable)
         node_conns[conn_node(next_conn, list(node_conns.keys())[-1])] = next_conn #Get next node, add to dict with val of next_conn
 
-    return list(node_conns.values()) #Only return connections
+    return conn_filter(list(node_conns.values())) #Only return connections
