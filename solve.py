@@ -82,6 +82,8 @@ def dfs(graph):
     def conn_filter(conns_old):
         conns = list(conns_old) #Create copy for returning
 
+        # BUG: X Conn not added
+
         for i, conn in enumerate(conns_old[:-1]):
 
             if not (conn.nodes[0] in conns_old[i+1].nodes or conn.nodes[1] in conns_old[i+1].nodes): #Missing Connection
@@ -141,16 +143,7 @@ def dfs(graph):
                         abs(conn.nodes[1].x-conns_old[i+1].nodes[1].x)
                     ))
 
-        conns_clean = list(conns)
-        for conn in conns:
-
-            if conn not in conns_old:
-                print(len(graph.img)-1, conn.nodes[0].x, conn.nodes[0].y, conn.nodes[1].x, conn.nodes[1].y)
-
-                if len(graph.img) - 1 in (conn.nodes[0].y, conn.nodes[1].y):
-                    conns_clean.remove(conn)
-
-        return conns_clean
+        return conns
 
 
     node_conns = {graph.start: Connection((graph.start, graph.start), 0)}

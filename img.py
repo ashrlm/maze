@@ -160,9 +160,7 @@ def write_solution(conns, img_path, graph):
     pxs = list(img.getdata())
     pxs = [pxs[i:i + w] for i in range(0, len(pxs), w)] #Split list into nested lists
 
-    for conn in conns[:-1]:
-
-        print(conn.nodes[0].x, conn.nodes[0].y, conn.nodes[1].x, conn.nodes[1].y)
+    for conn in conns:
 
         if conn.nodes[0].x == conn.nodes[1].x:
             for y in range(min(conn.nodes[0].y, conn.nodes[1].y), max(conn.nodes[0].y, conn.nodes[1].y) + 1):
