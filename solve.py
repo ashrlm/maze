@@ -92,49 +92,49 @@ def dfs(graph):
                         abs(conn.nodes[0].y-conns_old[i+1].nodes[0].y)
                     ))
 
-                elif conn.nodes[0].x == conns_old[i+1].nodes[1].x:
+                if conn.nodes[0].x == conns_old[i+1].nodes[1].x:
                     conns.append(Connection(
                         (conn.nodes[0],
                          conns_old[i+1].nodes[1]),
                         abs(conn.nodes[0].y-conns_old[i+1].nodes[1].y)
                     ))
 
-                elif conn.nodes[1].x == conns_old[i+1].nodes[0].x:
+                if conn.nodes[1].x == conns_old[i+1].nodes[0].x:
                     conns.append(Connection(
                         (conn.nodes[1],
                          conns_old[i+1].nodes[0]),
                         abs(conn.nodes[1].y-conns_old[i+1].nodes[0].y)
                     ))
 
-                elif conn.nodes[1].x == conns_old[i+1].nodes[1].x:
+                if conn.nodes[1].x == conns_old[i+1].nodes[1].x:
                     conns.append(Connection(
                         (conn.nodes[1],
                          conns_old[i+1].nodes[1]),
                         abs(conn.nodes[1].y-conns_old[i+1].nodes[1].y)
                     ))
 
-                elif conn.nodes[0].y == conns_old[i+1].nodes[0].y:
+                if conn.nodes[0].y == conns_old[i+1].nodes[0].y:
                     conns.append(Connection(
                         (conn.nodes[0],
                          conns_old[i+1].nodes[0]),
                         abs(conn.nodes[0].x-conns_old[i+1].nodes[0].x)
                     ))
 
-                elif conn.nodes[0].y == conns_old[i+1].nodes[1].y:
+                if conn.nodes[0].y == conns_old[i+1].nodes[1].y:
                     conns.append(Connection(
                         (conn.nodes[0],
                          conns_old[i+1].nodes[1]),
                         abs(conn.nodes[0].x-conns_old[i+1].nodes[1].x)
                     ))
 
-                elif conn.nodes[1].y == conns_old[i+1].nodes[0].y:
+                if conn.nodes[1].y == conns_old[i+1].nodes[0].y:
                     conns.append(Connection(
                         (conn.nodes[1],
                          conns_old[i+1].nodes[0]),
                         abs(conn.nodes[1].x-conns_old[i+1].nodes[0].x)
                     ))
 
-                elif conn.nodes[1].y == conns_old[i+1].nodes[1].y:
+                if conn.nodes[1].y == conns_old[i+1].nodes[1].y:
                     conns.append(Connection(
                         (conn.nodes[1],
                          conns_old[i+1].nodes[1]),
