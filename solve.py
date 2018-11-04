@@ -82,7 +82,8 @@ def dfs(graph):
     def conn_filter(conns_old):
         conns = list(conns_old) #Create copy for returning
 
-        for i, conn in enumerate(conns_old[:-1]): #Hacky Solution - Refactor if possible
+        for i, conn in enumerate(conns_old[:-1]):
+
             if not (conn.nodes[0] in conns_old[i+1].nodes or conn.nodes[1] in conns_old[i+1].nodes): #Missing Connection
                 if conn.nodes[0].x == conns_old[i+1].nodes[0].x: #Same x - Missing Y CONN
                     conns.append(Connection(
@@ -140,7 +141,16 @@ def dfs(graph):
                         abs(conn.nodes[1].x-conns_old[i+1].nodes[1].x)
                     ))
 
-        return conns
+        conns_clean = list(conns)
+        for conn in conns:
+
+            if conn not in conns_old:
+                print(len(graph.img)-1, conn.nodes[0].x, conn.nodes[0].y, conn.nodes[1].x, conn.nodes[1].y)
+
+                if len(graph.img) - 1 in (conn.nodes[0].y, conn.nodes[1].y):
+                    conns_clean.remove(conn)
+
+        return conns_clean
 
 
     node_conns = {graph.start: Connection((graph.start, graph.start), 0)}

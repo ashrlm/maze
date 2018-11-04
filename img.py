@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from PIL import Image
-import os
+import random
 
 class Node():
 
@@ -38,6 +38,14 @@ class Graph():
 
         if not self.end:
             raise AttributeError("End node not found")
+
+def generate(size):
+    img = Image.new('RGB', [size] * 2)
+    img.putpixel([random.choice(range(size)), 0], (255, 255, 255))
+    img.putpixel([random.choice(range(size)), size-1], (255, 255, 255))
+    img.show()
+
+generate(10)
 
 def get_av_dirs(img, xy):
     x,y = xy
