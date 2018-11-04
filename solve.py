@@ -82,8 +82,6 @@ def dfs(graph):
     def conn_filter(conns_old):
         conns = list(conns_old) #Create copy for returning
 
-        # BUG: X Conn not added
-
         for i, conn in enumerate(conns_old[:-1]):
 
             if not (conn.nodes[0] in conns_old[i+1].nodes or conn.nodes[1] in conns_old[i+1].nodes): #Missing Connection
@@ -153,6 +151,11 @@ def dfs(graph):
 
         if not hasattr(list(node_conns.keys())[-1], 'avaliable'):
             list(node_conns.keys())[-1].avaliable = list(node_conns.keys())[-1].connections
+
+        try:
+            list(node_conns.keys())[-1].avaliable.remove(list(node_conns.values())[-2])
+        except:
+            pass
 
         for conn in list(node_conns.keys())[-1].avaliable: #Filter out ones we've already been to
             if conn in list(node_conns.values()):
