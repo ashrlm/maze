@@ -152,8 +152,6 @@ def parse(img_path):
 
 def write_solution(conns, img_path, graph):
 
-    # BUG: Drawing non-further than required
-
     img = Image.open(img_path)
     w, h = img.size
 
@@ -162,13 +160,17 @@ def write_solution(conns, img_path, graph):
 
     for conn in conns:
 
+
         if conn.nodes[0].x == conn.nodes[1].x:
+
             for y in range(min(conn.nodes[0].y, conn.nodes[1].y), max(conn.nodes[0].y, conn.nodes[1].y) + 1):
-                pxs[y][conn.nodes[0].x] = (0, 0, 255)
+                if pxs[y][conn.nodes[0].x] == (255, 255, 255):
+                    pxs[y][conn.nodes[0].x] = (0, 0, 255)
 
         elif conn.nodes[0].y == conn.nodes[1].y:
             for x in range(min(conn.nodes[0].x, conn.nodes[1].x), max(conn.nodes[0].x, conn.nodes[1].x) + 1):
-                pxs[conn.nodes[1].y][x] = (0, 0, 255)
+                if pxs[conn.nodes[1].y][x] == (255, 255, 255):
+                    pxs[conn.nodes[1].y][x] = (0, 0, 255)
 
 
     new_pxs = []
