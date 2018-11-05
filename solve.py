@@ -141,17 +141,22 @@ def dfs(graph):
                         abs(conn.nodes[1].x-conns_old[i+1].nodes[1].x)
                     ))
 
-        return conns
+        for conn in conns:
+            tmp = list(conns) #Create temp to play with without altering conns
+            tmp.remove(conn)
+            for conn_ in tmp:
+                if conn_.nodes in (conn.nodes, conn.nodes[::-1]):
+                    if conn in conns:
+                        conns.remove(conn)
 
+        return conns
 
     node_conns = {graph.start: Connection((graph.start, graph.start), 0)}
     # Format for above - {Node, Conn leading to node}
 
     while list(node_conns.keys())[-1] != graph.end:
-
         if not hasattr(list(node_conns.keys())[-1], 'avaliable'):
             list(node_conns.keys())[-1].avaliable = list(node_conns.keys())[-1].connections
-
         try:
             list(node_conns.keys())[-1].avaliable.remove(list(node_conns.values())[-2])
         except:
@@ -161,15 +166,17 @@ def dfs(graph):
             if conn in list(node_conns.values()):
                 list(node_conns.keys())[-1].avaliable.remove(conn)
 
-        if list(node_conns.keys())[-1].avaliable == []:
+        if len(list(node_conns.keys())[-1].avaliable) == 0:
             try:
                 list(node_conns.keys())[-2].avaliable.remove(list(node_conns.values())[-1])
-            except ValueError:
+            except (IndexError, ValueError):
                 pass
+
             del node_conns[list(node_conns.keys())[-1]]
             continue
 
         next_conn = random.choice(list(node_conns.keys())[-1].avaliable)
+        list(node_conns.keys())[-1].avaliable.remove(next_conn)
         node_conns[conn_node(next_conn, list(node_conns.keys())[-1])] = next_conn #Get next node, add to dict with val of next_conn
 
-    return conn_filter(list(node_conns.values())) #Only return connections
+    return conn_filter(list(node_conns.values())) #Only return filtered connections

@@ -160,7 +160,6 @@ def write_solution(conns, img_path, graph):
 
     for conn in conns:
 
-
         if conn.nodes[0].x == conn.nodes[1].x:
 
             for y in range(min(conn.nodes[0].y, conn.nodes[1].y), max(conn.nodes[0].y, conn.nodes[1].y) + 1):

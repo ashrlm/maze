@@ -17,14 +17,14 @@ def parse_args():
 
     args = parser.parse_args(sys.argv[1:])
     if args.m:
-        parsed['m'] = args.m
+        parsed['m'] = args.m.lower()
     else:
         raise ValueError('Maze path required')
     if args.a:
-        parsed['a'] = args.a
+        parsed['a'] = args.a.lower()
         if args.a == 'dir_pri':
             if args.d:
-                parsed['d'] = args.d
+                parsed['d'] = args.d.lower()
             else:
                 parsed['d'] = 'dlur'
 
@@ -44,6 +44,9 @@ def __main__():
 
     elif parsed['a'] == 'dfs':
         solved = solve.dfs(maze)
+
+    else:
+        raise ValueError('Unknown Algorithm (random_move, dir_pri, dfs)')
 
     img.write_solution(solved, parsed['m'], maze)
 
