@@ -5,6 +5,7 @@ This program will take some maze and solve it.
 
 ### Usage
 First, install `pipenv` with `python -m pip install pipenv`
+Install all dependencies with `pipenv install`
 To generate a maze, run `pipenv run python generate.py -s [SIZE]`
 To solve a given maze, refer to the algorithm-specific instructions below
 
