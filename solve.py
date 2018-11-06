@@ -157,9 +157,15 @@ def dfs(graph):
         except:
             pass
 
+        tmp = list(node_conns.keys())[-1].avaliable
         for conn in list(node_conns.keys())[-1].avaliable: #Filter out ones we've already been to
             if conn in list(node_conns.values()):
-                list(node_conns.keys())[-1].avaliable.remove(conn)
+                tmp.remove(conn)
+
+        for conn in list(node_conns.keys())[:-1]:
+            if conn in list(node_conns.keys())[-1].avaliable:
+                tmp.remove(conn)
+        list(node_conns.keys())[-1].avaliable = tmp
 
         if list(node_conns.keys())[-1].avaliable == []:
             try:
