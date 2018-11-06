@@ -4,5 +4,20 @@
 This program will take some maze and solve it.
 
 ### Usage
-Mazes can be specified using the -m/--maze flag from the command line, followed by
-the path to the image.
+First, install `pipenv` with `python -m pip install pipenv`
+To generate a maze, run `pipenv run python generate.py -s [SIZE]`
+To solve a given maze, refer to the algorithm-specific instructions below
+
+##### Avaliable Algorithms:
+    - Random Walk - random_move
+        - `pipenv python run main.py -m [path\to\maze.png] -a random_move`
+    - Directional Prioritization - dir_pri:
+        - `pipenv python run main.py -m [path\to\maze.png] -a dir_pri -d [directions]`
+        - [directions] can be replaced with some string representing the order to check directions
+            - U - Up
+            - D - Down
+            - L - Left
+            - R - Right
+            - Example: DLUR - Down, left, up, right
+     - Depth-First Search - dfs:
+        -  `pipenv run python main.py -m [path\to\maze.png] -a dfs`
