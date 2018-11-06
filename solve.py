@@ -153,6 +153,11 @@ def dfs(graph):
             list(node_conns.keys())[-1].avaliable = list(node_conns.keys())[-1].connections
 
         try:
+            list(node_conns.keys())[-2].avaliable.remove(list(node_conns.values())[-1])
+        except:
+            pass
+
+        try:
             list(node_conns.keys())[-1].avaliable.remove(list(node_conns.values())[-2])
         except:
             pass
@@ -161,11 +166,18 @@ def dfs(graph):
             if conn in list(node_conns.values()):
                 list(node_conns.keys())[-1].avaliable.remove(conn)
 
+        # if len(list(node_conns.keys())[-1].avaliable) == 1 and len(node_conns.keys()) > 1:
+            # try:
+                # if list(node_conns.keys())[0].avaliable == list(node_conns.keys())[-2].avaliable:
+                    # del node_conns[list(node_conns.keys())[-1]]
+                    # pass
+            # except:
+            #   pass
+
+        # TODO: Remove previously used connections from current_node.avaliable
+
+
         if list(node_conns.keys())[-1].avaliable == []:
-            try:
-                list(node_conns.keys())[-2].avaliable.remove(list(node_conns.values())[-1])
-            except ValueError:
-                pass
             del node_conns[list(node_conns.keys())[-1]]
             continue
 
