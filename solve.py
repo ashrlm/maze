@@ -77,6 +77,14 @@ def dir_pri(graph, pri='ldru'): #Pri - Str some permutation of udlr (Up, Down, L
 
     return conns
 
+def rm_dup(conns):
+    new_conns = []
+    for conn in conns:
+        for conn_ in conns:
+            if conn == conn_ or conn.nodes not in (conn_.nodes, conn_.nodes[::-1]):
+                new_conns.append(conn)
+    return new_conns
+
 def dfs(graph):
 
     def conn_filter(conns_old):
@@ -141,14 +149,14 @@ def dfs(graph):
                         abs(conn.nodes[1].x-conns_old[i+1].nodes[1].x)
                     ))
 
-        return conns
+        return list(set(conns))
 
 
     node_conns = {graph.start: img.Connection((graph.start, graph.start), 0)}
     # Format for above - {Node, Conn leading to node}
     ##print(img.Connection.conns)
 
-    while list(node_conns.keys())[-1] != graph.end:
+    while list(node_conns.keys())[-1] != graph.end: # BUG: Conn to last node not removed from conns before backtracking
 
         if not hasattr(list(node_conns.keys())[-1], 'avaliable'):
             list(node_conns.keys())[-1].avaliable = list(node_conns.keys())[-1].connections
@@ -160,22 +168,35 @@ def dfs(graph):
 
         tmp = list(node_conns.keys())[-1].avaliable
         for conn in list(node_conns.values()): #Filter out ones we've already been to
-            if conn in tmp:
-                tmp.remove(conn)
-
+            for conn_ in list(node_conns.values()):
+                if conn.nodes in (conn_.nodes, conn_.nodes[::-1]) and conn != conn_:
+                    if conn in tmp:
+                        tmp.remove(conn)
         list(node_conns.keys())[-1].avaliable = tmp
 
         if list(node_conns.keys())[-1].avaliable == []:
             try:
+                list(node_conns.keys())[-1].avaliable.remove(list(node_conns.values())[-1])
+            except ValueError:
+                pass
+            try:
+                list(node_conns.keys())[-1].avaliable.remove(list(node_conns.values())[-2])
+            except ValueError:
+                pass
+            try:
                 list(node_conns.keys())[-2].avaliable.remove(list(node_conns.values())[-1])
+            except ValueError:
+                pass
+            try:
+                list(node_conns.keys())[-2].avaliable.remove(list(node_conns.values())[-2])
             except ValueError:
                 pass
 
             del node_conns[list(node_conns.keys())[-1]]
-
             continue
 
         next_conn = random.choice(list(node_conns.keys())[-1].avaliable)
         node_conns[conn_node(next_conn, list(node_conns.keys())[-1])] = next_conn #Get next node, add to dict with val of next_conn
 
-    return conn_filter(list(node_conns.values()))#Only return connections
+    unduplicated = rm_dup(list(node_conns.values()))
+    return conn_filter(unduplicated)#Only return connections
