@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 
-import img
 import solve
+import img
 
 import sys
+import argparse
+import subprocess
+
 import argparse
 
 def parse_args():

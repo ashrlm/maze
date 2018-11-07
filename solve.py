@@ -1,5 +1,5 @@
 import random
-from img import Connection
+import img
 
 def conn_node(conn, node):
     if conn.nodes[0] == node: #Check which one index of the conn our node is at
@@ -86,56 +86,56 @@ def dfs(graph):
 
             if not (conn.nodes[0] in conns_old[i+1].nodes or conn.nodes[1] in conns_old[i+1].nodes): #Missing Connection
                 if conn.nodes[0].x == conns_old[i+1].nodes[0].x: #Same x - Missing Y CONN
-                    conns.append(Connection(
+                    conns.append(img.Connection(
                         (conn.nodes[0],
                          conns_old[i+1].nodes[0]),
                         abs(conn.nodes[0].y-conns_old[i+1].nodes[0].y)
                     ))
 
                 if conn.nodes[0].x == conns_old[i+1].nodes[1].x:
-                    conns.append(Connection(
+                    conns.append(img.Connection(
                         (conn.nodes[0],
                          conns_old[i+1].nodes[1]),
                         abs(conn.nodes[0].y-conns_old[i+1].nodes[1].y)
                     ))
 
                 if conn.nodes[1].x == conns_old[i+1].nodes[0].x:
-                    conns.append(Connection(
+                    conns.append(img.Connection(
                         (conn.nodes[1],
                          conns_old[i+1].nodes[0]),
                         abs(conn.nodes[1].y-conns_old[i+1].nodes[0].y)
                     ))
 
                 if conn.nodes[1].x == conns_old[i+1].nodes[1].x:
-                    conns.append(Connection(
+                    conns.append(img.Connection(
                         (conn.nodes[1],
                          conns_old[i+1].nodes[1]),
                         abs(conn.nodes[1].y-conns_old[i+1].nodes[1].y)
                     ))
 
                 if conn.nodes[0].y == conns_old[i+1].nodes[0].y:
-                    conns.append(Connection(
+                    conns.append(img.Connection(
                         (conn.nodes[0],
                          conns_old[i+1].nodes[0]),
                         abs(conn.nodes[0].x-conns_old[i+1].nodes[0].x)
                     ))
 
                 if conn.nodes[0].y == conns_old[i+1].nodes[1].y:
-                    conns.append(Connection(
+                    conns.append(img.Connection(
                         (conn.nodes[0],
                          conns_old[i+1].nodes[1]),
                         abs(conn.nodes[0].x-conns_old[i+1].nodes[1].x)
                     ))
 
                 if conn.nodes[1].y == conns_old[i+1].nodes[0].y:
-                    conns.append(Connection(
+                    conns.append(img.Connection(
                         (conn.nodes[1],
                          conns_old[i+1].nodes[0]),
                         abs(conn.nodes[1].x-conns_old[i+1].nodes[0].x)
                     ))
 
                 if conn.nodes[1].y == conns_old[i+1].nodes[1].y:
-                    conns.append(Connection(
+                    conns.append(img.Connection(
                         (conn.nodes[1],
                          conns_old[i+1].nodes[1]),
                         abs(conn.nodes[1].x-conns_old[i+1].nodes[1].x)
@@ -144,8 +144,9 @@ def dfs(graph):
         return conns
 
 
-    node_conns = {graph.start: Connection((graph.start, graph.start), 0)}
+    node_conns = {graph.start: img.Connection((graph.start, graph.start), 0)}
     # Format for above - {Node, Conn leading to node}
+    ##print(img.Connection.conns)
 
     while list(node_conns.keys())[-1] != graph.end:
 
@@ -158,13 +159,10 @@ def dfs(graph):
             pass
 
         tmp = list(node_conns.keys())[-1].avaliable
-        for conn in list(node_conns.keys())[-1].avaliable: #Filter out ones we've already been to
-            if conn in list(node_conns.values()):
+        for conn in list(node_conns.values()): #Filter out ones we've already been to
+            if conn in tmp:
                 tmp.remove(conn)
 
-        for conn in list(node_conns.keys())[:-1]:
-            if conn in list(node_conns.keys())[-1].avaliable:
-                tmp.remove(conn)
         list(node_conns.keys())[-1].avaliable = tmp
 
         if list(node_conns.keys())[-1].avaliable == []:
@@ -172,10 +170,12 @@ def dfs(graph):
                 list(node_conns.keys())[-2].avaliable.remove(list(node_conns.values())[-1])
             except ValueError:
                 pass
+
             del node_conns[list(node_conns.keys())[-1]]
+
             continue
 
         next_conn = random.choice(list(node_conns.keys())[-1].avaliable)
         node_conns[conn_node(next_conn, list(node_conns.keys())[-1])] = next_conn #Get next node, add to dict with val of next_conn
 
-    return conn_filter(list(node_conns.values())) #Only return connections
+    return conn_filter(list(node_conns.values()))#Only return connections

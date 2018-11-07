@@ -14,9 +14,14 @@ class Node():
         Node.nodes.append(self)
 
 class Connection():
+
+    conns = []
+
     def __init__(self, nodes, weight):
         self.nodes = nodes
         self.weight = weight
+
+        Connection.conns.append(self)
 
 class Graph():
     def __init__(self, img, nodes, connections):
@@ -85,6 +90,53 @@ def is_conn(img, node, node_):
 
         return True
 
+def conn_filter(conns, nodes):
+    new_conns = list(conns)[:]
+
+    for conn in conns:
+        if conn.nodes[0].x == conn.nodes[1].x: #Y changing conn
+
+            for node in nodes:
+                if node.x in (conn.nodes[0].x, conn.nodes[1].x):
+                    if node.y in range(min(conn.nodes[0].y, conn.nodes[1].y) + 1, max(conn.nodes[0].y, conn.nodes[1].y)):
+                        try:
+                            new_conns.remove(conn)
+                            #print(conn.nodes[0].x, conn.nodes[0].y, conn.nodes[1].x, conn.nodes[1].y, node.x, node.y)
+                        except ValueError:
+                            #print(conn.nodes[0].x, conn.nodes[0].y, conn.nodes[1].x, conn.nodes[1].y, node.x, node.y)
+                            pass
+
+                        try:
+                            conn.nodes[0].connections.remove(conn)
+                        except:
+                            pass
+                        try:
+                            conn.nodes[1].connections.remove(conn)
+                        except:
+                            pass
+
+        elif conn.nodes[0].y == conn.nodes[1].y: #X changing conn
+
+            for node in nodes:
+
+                if node.y in (conn.nodes[0].y, conn.nodes[1].y):
+                    if node.x in range(min(conn.nodes[0].x, conn.nodes[1].x) + 1, max(conn.nodes[0].x, conn.nodes[1].x)):
+                        try:
+                            new_conns.remove(conn)
+                        except ValueError:
+                            pass
+
+                        try:
+                            conn.nodes[0].connections.remove(conn)
+                        except:
+                            pass
+                        try:
+                            conn.nodes[1].connections.remove(conn)
+                        except:
+                            pass
+
+    return new_conns
+
 def is_node(img, xy):
     x,y = xy
     if img[y][x] == (255, 255, 255):
@@ -140,15 +192,8 @@ def parse(img_path):
 
                 node.connections.append(new_conn)
 
-                for connection in connections:
-                    if connection.nodes == new_conn.nodes[::-1]:
-                        break
-
-                else:
-                    connections.append(new_conn)
-
-
-    return Graph(pxs, Node.nodes, connections)
+    conns = conn_filter(Connection.conns, Node.nodes)
+    return Graph(pxs, Node.nodes, conns)
 
 def write_solution(conns, img_path, graph):
 
@@ -160,6 +205,7 @@ def write_solution(conns, img_path, graph):
 
     for conn in conns:
 
+        #print(conn.nodes[0].x, conn.nodes[0].y, conn.nodes[1].x, conn.nodes[1].y)
 
         if conn.nodes[0].x == conn.nodes[1].x:
 
