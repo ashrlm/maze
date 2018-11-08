@@ -77,126 +77,42 @@ def dir_pri(graph, pri='ldru'): #Pri - Str some permutation of udlr (Up, Down, L
 
     return conns
 
-def rm_dup(conns):
-    new_conns = []
-    for conn in conns:
-        for conn_ in conns:
-            if conn == conn_ or conn.nodes not in (conn_.nodes, conn_.nodes[::-1]):
-                new_conns.append(conn)
-    return new_conns
-
 def dfs(graph):
 
-    def conn_filter(conns_old):
-        conns = list(conns_old) #Create copy for returning
+    def rm_conn(conns, conn_rm):
+        for conn in conns:
+            if conn.nodes in (conn_rm.nodes, conn_rm.nodes[::-1]):
+                try:
+                    conns.remove(conn)
+                except ValueError:
+                    print(1)
 
-        for i, conn in enumerate(conns_old[:-1]):
+    nodes = [graph.start]
+    conns = []
 
-            if not (conn.nodes[0] in conns_old[i+1].nodes or conn.nodes[1] in conns_old[i+1].nodes): #Missing Connection
-                if conn.nodes[0].x == conns_old[i+1].nodes[0].x: #Same x - Missing Y CONN
-                    conns.append(img.Connection(
-                        (conn.nodes[0],
-                         conns_old[i+1].nodes[0]),
-                        abs(conn.nodes[0].y-conns_old[i+1].nodes[0].y)
-                    ))
+    for node in graph.nodes: #Setup av_dir for node
+        node.avaliable = list(node.connections)
 
-                if conn.nodes[0].x == conns_old[i+1].nodes[1].x:
-                    conns.append(img.Connection(
-                        (conn.nodes[0],
-                         conns_old[i+1].nodes[1]),
-                        abs(conn.nodes[0].y-conns_old[i+1].nodes[1].y)
-                    ))
+    while nodes[-1] != graph.end:
 
-                if conn.nodes[1].x == conns_old[i+1].nodes[0].x:
-                    conns.append(img.Connection(
-                        (conn.nodes[1],
-                         conns_old[i+1].nodes[0]),
-                        abs(conn.nodes[1].y-conns_old[i+1].nodes[0].y)
-                    ))
-
-                if conn.nodes[1].x == conns_old[i+1].nodes[1].x:
-                    conns.append(img.Connection(
-                        (conn.nodes[1],
-                         conns_old[i+1].nodes[1]),
-                        abs(conn.nodes[1].y-conns_old[i+1].nodes[1].y)
-                    ))
-
-                if conn.nodes[0].y == conns_old[i+1].nodes[0].y:
-                    conns.append(img.Connection(
-                        (conn.nodes[0],
-                         conns_old[i+1].nodes[0]),
-                        abs(conn.nodes[0].x-conns_old[i+1].nodes[0].x)
-                    ))
-
-                if conn.nodes[0].y == conns_old[i+1].nodes[1].y:
-                    conns.append(img.Connection(
-                        (conn.nodes[0],
-                         conns_old[i+1].nodes[1]),
-                        abs(conn.nodes[0].x-conns_old[i+1].nodes[1].x)
-                    ))
-
-                if conn.nodes[1].y == conns_old[i+1].nodes[0].y:
-                    conns.append(img.Connection(
-                        (conn.nodes[1],
-                         conns_old[i+1].nodes[0]),
-                        abs(conn.nodes[1].x-conns_old[i+1].nodes[0].x)
-                    ))
-
-                if conn.nodes[1].y == conns_old[i+1].nodes[1].y:
-                    conns.append(img.Connection(
-                        (conn.nodes[1],
-                         conns_old[i+1].nodes[1]),
-                        abs(conn.nodes[1].x-conns_old[i+1].nodes[1].x)
-                    ))
-
-        return list(set(conns))
-
-
-    node_conns = {graph.start: img.Connection((graph.start, graph.start), 0)}
-    # Format for above - {Node, Conn leading to node}
-    ##print(img.Connection.conns)
-
-    while list(node_conns.keys())[-1] != graph.end: # BUG: Conn to last node not removed from conns before backtracking
-
-        if not hasattr(list(node_conns.keys())[-1], 'avaliable'):
-            list(node_conns.keys())[-1].avaliable = list(node_conns.keys())[-1].connections
-
-        try:
-            list(node_conns.keys())[-1].avaliable.remove(list(node_conns.values())[-2])
-        except:
-            pass
-
-        tmp = list(node_conns.keys())[-1].avaliable
-        for conn in list(node_conns.values()): #Filter out ones we've already been to
-            for conn_ in list(node_conns.values()):
-                if conn.nodes in (conn_.nodes, conn_.nodes[::-1]) and conn != conn_:
-                    if conn in tmp:
-                        tmp.remove(conn)
-        list(node_conns.keys())[-1].avaliable = tmp
-
-        if list(node_conns.keys())[-1].avaliable == []:
-            try:
-                list(node_conns.keys())[-1].avaliable.remove(list(node_conns.values())[-1])
-            except ValueError:
-                pass
-            try:
-                list(node_conns.keys())[-1].avaliable.remove(list(node_conns.values())[-2])
-            except ValueError:
-                pass
-            try:
-                list(node_conns.keys())[-2].avaliable.remove(list(node_conns.values())[-1])
-            except ValueError:
-                pass
-            try:
-                list(node_conns.keys())[-2].avaliable.remove(list(node_conns.values())[-2])
-            except ValueError:
-                pass
-
-            del node_conns[list(node_conns.keys())[-1]]
+        if nodes[-1].avaliable == []:
+            nodes.pop()
+            conns.pop()
             continue
 
-        next_conn = random.choice(list(node_conns.keys())[-1].avaliable)
-        node_conns[conn_node(next_conn, list(node_conns.keys())[-1])] = next_conn #Get next node, add to dict with val of next_conn
+        for conn in nodes[-1].avaliable:
+            if conn.nodes[0] == nodes[-1]:
+                conns.append(conn)
+                rm_conn(nodes[-1].avaliable, conn)
+                rm_conn(conn.nodes[1].avaliable, conn)
+                nodes.append(conn.nodes[1])
+                break
 
-    unduplicated = rm_dup(list(node_conns.values()))
-    return conn_filter(unduplicated)#Only return connections
+            else:
+                conns.append(conn)
+                rm_conn(nodes[-1].avaliable, conn)
+                rm_conn(conn.nodes[0].avaliable, conn)
+                nodes.append(conn.nodes[0])
+                break
+
+    return conns
