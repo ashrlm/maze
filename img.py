@@ -46,8 +46,8 @@ class Graph():
 
 def generate(size):
     img = Image.new('RGB', [size] * 2)
-    img.putpixel([random.choice(range(size)), 0], (255, 255, 255))
-    img.putpixel([random.choice(range(size)), size-1], (255, 255, 255))
+    img.putpixel([random.randint(size), 0], (255, 255, 255))
+    img.putpixel([random.randint(size), size-1], (255, 255, 255))
     img.show()
 
 def get_av_dirs(img, xy):
