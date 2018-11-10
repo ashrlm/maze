@@ -129,7 +129,9 @@ def dijkstra(graph):
 
     while curr_node != graph.end:
         if curr_node.avaliable == []:
-            curr_node = curr_node.previous
+            new_node = curr_node.previous
+            curr_node.previous = None
+            curr_node = new_node
             continue
 
         next_conn = None
