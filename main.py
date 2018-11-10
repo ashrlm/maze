@@ -48,6 +48,9 @@ def __main__():
     elif parsed['a'] == 'dfs':
         solved = solve.dfs(maze)
 
+    elif parsed['a'] == 'dijkstra':
+        solved = solve.dijkstra(maze)
+
     img.write_solution(solved, parsed['m'], maze)
 
 if __name__ == '__main__':

@@ -77,15 +77,15 @@ def dir_pri(graph, pri='ldru'): #Pri - Str some permutation of udlr (Up, Down, L
 
     return conns
 
-def dfs(graph):
+def rm_conn(conns, conn_rm):
+    for conn in conns:
+        if conn.nodes in (conn_rm.nodes, conn_rm.nodes[::-1]):
+            try:
+                conns.remove(conn)
+            except ValueError:
+                pass
 
-    def rm_conn(conns, conn_rm):
-        for conn in conns:
-            if conn.nodes in (conn_rm.nodes, conn_rm.nodes[::-1]):
-                try:
-                    conns.remove(conn)
-                except ValueError:
-                    print(1)
+def dfs(graph):
 
     nodes = [graph.start]
     conns = []
@@ -114,5 +114,59 @@ def dfs(graph):
                 rm_conn(conn.nodes[0].avaliable, conn)
                 nodes.append(conn.nodes[0])
                 break
+
+    return conns
+
+def dijkstra(graph):
+
+    curr_node = graph.start
+    for node in graph.nodes:
+        node.avaliable = list(node.connections)
+        node.previous = None
+        node.cost = float('inf')
+
+    graph.start.cost = 0
+
+    while curr_node != graph.end:
+        if curr_node.avaliable == []:
+            curr_node = curr_node.previous
+            continue
+
+        next_conn = None
+        next_node = None
+        next_cost = float('inf')
+        for conn in curr_node.avaliable:
+            if conn.nodes[0] == curr_node:
+                if curr_node.cost + conn.cost < conn.nodes[1].cost:
+                    conn.nodes[1].cost = curr_node.cost + conn.cost
+
+                if conn.nodes[1].cost < next_cost:
+                    next_conn = conn
+                    next_node = conn.nodes[1]
+                    next_cost = conn.nodes[1].cost
+
+            else:
+                if curr_node.cost + conn.cost < conn.nodes[0].cost:
+                    conn.nodes[0].cost = curr_node.cost + conn.cost
+
+                if conn.nodes[0].cost < next_cost:
+                    next_conn = conn
+                    next_node = conn.nodes[0]
+                    next_cost = conn.nodes[0].cost
+
+        rm_conn(next_node.avaliable, next_conn)
+        rm_conn(curr_node.avaliable, next_conn)
+
+        next_node.previous = curr_node
+        curr_node = next_node
+
+    conns = []
+    for node in graph.nodes:
+        if node.previous != None:
+            if node.previous.x == node.x:
+                conns.append(img.Connection((node, node.previous), abs(node.y - node.previous.y)))
+
+            else:
+                conns.append(img.Connection((node, node.previous), abs(node.x - node.previous.x)))
 
     return conns

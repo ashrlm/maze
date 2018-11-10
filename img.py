@@ -11,15 +11,16 @@ class Node():
         self.x, self.y = xy #XYPos - Used when drawing solution
         self.av_dirs = av_dirs # Avaliable Directions - Determine if others are nodes
         self.connections = []
+
         Node.nodes.append(self)
 
 class Connection():
 
     conns = []
 
-    def __init__(self, nodes, weight):
+    def __init__(self, nodes, cost):
         self.nodes = nodes
-        self.weight = weight
+        self.cost = cost
 
         Connection.conns.append(self)
 
