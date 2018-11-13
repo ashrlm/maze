@@ -56,16 +56,17 @@ def __main__():
     elif parsed['a'] == 'dir_pri':
         solved = solve.dir_pri(maze, parsed['d'])
 
+    elif parsed['a'] == 'dijkstra':
+        solved = solve.dijkstra(maze)
+
     elif parsed['a'] == 'dfs':
         solved = solve.dfs(maze)
 
-<<<<<<< HEAD
+
     else:
         raise ValueError('Unknown Algorithm (random_move, dir_pri, dfs)')
-=======
-    elif parsed['a'] == 'dijkstra':
-        solved = solve.dijkstra(maze)
->>>>>>> 38f2258231c289f0e50e41ecce9a2afbfeca9455
+
+
 
     img.write_solution(solved, parsed['m'], maze)
 

@@ -77,7 +77,7 @@ def dir_pri(graph, pri='ldru'): #Pri - Str some permutation of udlr (Up, Down, L
 
     return conns
 
-<<<<<<< HEAD
+
 def dfs(graph):
 
     def conn_filter(conns_old):
@@ -181,7 +181,7 @@ def dfs(graph):
         node_conns[conn_node(next_conn, list(node_conns.keys())[-1])] = next_conn #Get next node, add to dict with val of next_conn
 
     return conn_filter(list(node_conns.values())) #Only return filtered connections
-=======
+
 def rm_conn(conns, conn_rm):
     for conn in conns:
         if conn.nodes in (conn_rm.nodes, conn_rm.nodes[::-1]):
@@ -277,4 +277,4 @@ def dijkstra(graph):
                 conns.append(img.Connection((node, node.previous), abs(node.x - node.previous.x)))
 
     return conns
->>>>>>> 38f2258231c289f0e50e41ecce9a2afbfeca9455
+

@@ -47,8 +47,12 @@ class Graph():
 
 def generate(size):
     img = Image.new('RGB', [size] * 2)
-    img.putpixel([random.randint(size), 0], (255, 255, 255))
-    img.putpixel([random.randint(size), size-1], (255, 255, 255))
+    s_pos = random.randint(size)
+    e_pos = random.randint(size)
+    img.putpixel((s_pos, 0), (255, 255, 255))
+    img.putpixel((s_pos, 1), (255, 255, 255))
+    img.putpixel((e_pos, size-1], (255, 255, 255))
+    img.putpixel((e_pos, size-2), (255, 255, 255))
     img.show()
 
 def get_av_dirs(img, xy):
@@ -206,11 +210,6 @@ def write_solution(conns, img_path, graph):
 
     for conn in conns:
 
-<<<<<<< HEAD
-=======
-        #print(conn.nodes[0].x, conn.nodes[0].y, conn.nodes[1].x, conn.nodes[1].y)
-
->>>>>>> 38f2258231c289f0e50e41ecce9a2afbfeca9455
         if conn.nodes[0].x == conn.nodes[1].x:
 
             for y in range(min(conn.nodes[0].y, conn.nodes[1].y), max(conn.nodes[0].y, conn.nodes[1].y) + 1):
