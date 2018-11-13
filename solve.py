@@ -1,5 +1,5 @@
 import random
-from img import Connection
+import img
 
 def conn_node(conn, node):
     if conn.nodes[0] == node: #Check which one index of the conn our node is at
@@ -77,6 +77,7 @@ def dir_pri(graph, pri='ldru'): #Pri - Str some permutation of udlr (Up, Down, L
 
     return conns
 
+<<<<<<< HEAD
 def dfs(graph):
 
     def conn_filter(conns_old):
@@ -180,3 +181,100 @@ def dfs(graph):
         node_conns[conn_node(next_conn, list(node_conns.keys())[-1])] = next_conn #Get next node, add to dict with val of next_conn
 
     return conn_filter(list(node_conns.values())) #Only return filtered connections
+=======
+def rm_conn(conns, conn_rm):
+    for conn in conns:
+        if conn.nodes in (conn_rm.nodes, conn_rm.nodes[::-1]):
+            try:
+                conns.remove(conn)
+            except ValueError:
+                pass
+
+def dfs(graph):
+
+    nodes = [graph.start]
+    conns = []
+
+    for node in graph.nodes: #Setup av_dir for node
+        node.avaliable = list(node.connections)
+
+    while nodes[-1] != graph.end:
+
+        if nodes[-1].avaliable == []:
+            nodes.pop()
+            conns.pop()
+            continue
+
+        for conn in nodes[-1].avaliable:
+            if conn.nodes[0] == nodes[-1]:
+                conns.append(conn)
+                rm_conn(nodes[-1].avaliable, conn)
+                rm_conn(conn.nodes[1].avaliable, conn)
+                nodes.append(conn.nodes[1])
+                break
+
+            else:
+                conns.append(conn)
+                rm_conn(nodes[-1].avaliable, conn)
+                rm_conn(conn.nodes[0].avaliable, conn)
+                nodes.append(conn.nodes[0])
+                break
+
+    return conns
+
+def dijkstra(graph):
+
+    curr_node = graph.start
+    for node in graph.nodes:
+        node.avaliable = list(node.connections)
+        node.previous = None
+        node.cost = float('inf')
+
+    graph.start.cost = 0
+
+    while curr_node != graph.end:
+        if curr_node.avaliable == []:
+            new_node = curr_node.previous
+            curr_node.previous = None
+            curr_node = new_node
+            continue
+
+        next_conn = None
+        next_node = None
+        next_cost = float('inf')
+        for conn in curr_node.avaliable:
+            if conn.nodes[0] == curr_node:
+                if curr_node.cost + conn.cost < conn.nodes[1].cost:
+                    conn.nodes[1].cost = curr_node.cost + conn.cost
+
+                if conn.nodes[1].cost < next_cost:
+                    next_conn = conn
+                    next_node = conn.nodes[1]
+                    next_cost = conn.nodes[1].cost
+
+            else:
+                if curr_node.cost + conn.cost < conn.nodes[0].cost:
+                    conn.nodes[0].cost = curr_node.cost + conn.cost
+
+                if conn.nodes[0].cost < next_cost:
+                    next_conn = conn
+                    next_node = conn.nodes[0]
+                    next_cost = conn.nodes[0].cost
+
+        rm_conn(next_node.avaliable, next_conn)
+        rm_conn(curr_node.avaliable, next_conn)
+
+        next_node.previous = curr_node
+        curr_node = next_node
+
+    conns = []
+    for node in graph.nodes:
+        if node.previous != None:
+            if node.previous.x == node.x:
+                conns.append(img.Connection((node, node.previous), abs(node.y - node.previous.y)))
+
+            else:
+                conns.append(img.Connection((node, node.previous), abs(node.x - node.previous.x)))
+
+    return conns
+>>>>>>> 38f2258231c289f0e50e41ecce9a2afbfeca9455

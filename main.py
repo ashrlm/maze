@@ -1,14 +1,18 @@
 #!/usr/bin/env python3
 
-import img
 import solve
+import img
 
 import sys
+import argparse
+import subprocess
+
 import argparse
 
 def parse_args():
     maze_path = None
     parser = argparse.ArgumentParser(description="Solve a given maze")
+    parser.add_argument('-s', help='Size of maze to generate. (Also cue for generation)')
     parser.add_argument('-m', help='Path of maze to solve')
     parser.add_argument('-a', help="Algorithm to use for solving")
     parser.add_argument('-d', help='Directions if using dir_pri mode')
@@ -16,6 +20,9 @@ def parse_args():
     parsed = {}
 
     args = parser.parse_args(sys.argv[1:])
+    if args.s:
+        parsed['s'] = args.s
+        return parsed
     if args.m:
         parsed['m'] = args.m.lower()
     else:
@@ -35,6 +42,13 @@ def parse_args():
 
 def __main__():
     parsed = parse_args()
+    try:
+        size = parsed['s']
+        img.generate(size)
+        print("Maze of size", s, "generated.")
+        quit
+    except KeyError:
+        pass
     maze = img.parse(parsed['m'])
     if parsed['a'] == 'random_move':
         solved = solve.random_move(maze)
@@ -45,8 +59,13 @@ def __main__():
     elif parsed['a'] == 'dfs':
         solved = solve.dfs(maze)
 
+<<<<<<< HEAD
     else:
         raise ValueError('Unknown Algorithm (random_move, dir_pri, dfs)')
+=======
+    elif parsed['a'] == 'dijkstra':
+        solved = solve.dijkstra(maze)
+>>>>>>> 38f2258231c289f0e50e41ecce9a2afbfeca9455
 
     img.write_solution(solved, parsed['m'], maze)
 
