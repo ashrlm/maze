@@ -47,12 +47,13 @@ class Graph():
 
 def generate(size):
     img = Image.new('RGB', [size] * 2)
-    s_pos = random.randint(size)
-    e_pos = random.randint(size)
+    s_pos = random.randrange(size)
+    e_pos = random.randrange(size)
     img.putpixel((s_pos, 0), (255, 255, 255))
     img.putpixel((s_pos, 1), (255, 255, 255))
-    img.putpixel((e_pos, size-1], (255, 255, 255))
+    img.putpixel((e_pos, size-1), (255, 255, 255))
     img.putpixel((e_pos, size-2), (255, 255, 255))
+    img.save('imgs/' + str(size) * 2 + '.png')
     img.show()
 
 def get_av_dirs(img, xy):
@@ -106,9 +107,7 @@ def conn_filter(conns, nodes):
                     if node.y in range(min(conn.nodes[0].y, conn.nodes[1].y) + 1, max(conn.nodes[0].y, conn.nodes[1].y)):
                         try:
                             new_conns.remove(conn)
-                            #print(conn.nodes[0].x, conn.nodes[0].y, conn.nodes[1].x, conn.nodes[1].y, node.x, node.y)
                         except ValueError:
-                            #print(conn.nodes[0].x, conn.nodes[0].y, conn.nodes[1].x, conn.nodes[1].y, node.x, node.y)
                             pass
 
                         try:

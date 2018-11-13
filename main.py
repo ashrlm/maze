@@ -21,7 +21,7 @@ def parse_args():
 
     args = parser.parse_args(sys.argv[1:])
     if args.s:
-        parsed['s'] = args.s
+        parsed['s'] = int(args.s)
         return parsed
     if args.m:
         parsed['m'] = args.m.lower()
@@ -45,8 +45,8 @@ def __main__():
     try:
         size = parsed['s']
         img.generate(size)
-        print("Maze of size", s, "generated.")
-        quit
+        quit()
+        
     except KeyError:
         pass
     maze = img.parse(parsed['m'])
