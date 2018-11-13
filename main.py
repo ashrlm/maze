@@ -46,27 +46,40 @@ def __main__():
         size = parsed['s']
         img.generate(size)
         quit()
-        
+
     except KeyError:
         pass
     maze = img.parse(parsed['m'])
     if parsed['a'] == 'random_move':
-        solved = solve.random_move(maze)
+        try:
+            solved = solve.random_move(maze)
+        except IndexError:
+            print("Unsolvable maze")
+            quit()
 
     elif parsed['a'] == 'dir_pri':
-        solved = solve.dir_pri(maze, parsed['d'])
+        try:
+            solved = solve.dir_pri(maze, pri=parsed['d'])
+        except TypeError:
+            print("Unsolvable maze")
+            quit()
 
     elif parsed['a'] == 'dijkstra':
-        solved = solve.dijkstra(maze)
+        try:
+            solved = solve.dijkstra(maze)
+        except AttributeError:
+            print("Unsolvable maze")
+            quit()
 
     elif parsed['a'] == 'dfs':
-        solved = solve.dfs(maze)
-
+        try:
+            solved = solve.dfs(maze)
+        except IndexError:
+            print("Unsolvable maze")
+            quit()
 
     else:
         raise ValueError('Unknown Algorithm (random_move, dir_pri, dfs)')
-
-
 
     img.write_solution(solved, parsed['m'], maze)
 
