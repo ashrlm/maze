@@ -2,12 +2,11 @@
 
 import solve
 import img
+from generate import Generate
 
 import sys
 import argparse
 import subprocess
-
-import argparse
 
 def parse_args():
     maze_path = None
@@ -44,7 +43,7 @@ def __main__():
     parsed = parse_args()
     try:
         size = parsed['s']
-        img.generate(size)
+        Generate.generate(size)
         quit()
 
     except KeyError:

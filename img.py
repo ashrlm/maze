@@ -45,17 +45,6 @@ class Graph():
         if not self.end:
             raise AttributeError("End node not found")
 
-def generate(size):
-    img = Image.new('RGB', [size] * 2)
-    s_pos = random.randrange(size)
-    e_pos = random.randrange(size)
-    img.putpixel((s_pos, 0), (255, 255, 255))
-    img.putpixel((s_pos, 1), (255, 255, 255))
-    img.putpixel((e_pos, size-1), (255, 255, 255))
-    img.putpixel((e_pos, size-2), (255, 255, 255))
-    img.save('imgs/' + str(size) * 2 + '.png')
-    img.show()
-
 def get_av_dirs(img, xy):
     x,y = xy
     av_dirs = [False] * 4 #Up, Down, Left, Right
