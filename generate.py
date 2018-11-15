@@ -1,16 +1,18 @@
-from pil import Image
+from PIL import Image
+import random
+import math
 
 class Generate():
 
     def check_close(a, lst, abs_tol):
 
         for i in lst:
-            if math.isclose(a, i, abs_tol)
+            if math.isclose(a, i, abs_tol=abs_tol):
                 return True
 
         return False
 
-    def gen_hor(ys):
+    def gen_hor(size, ys, img):
 
         y = random.randint(1, size-2)
 
@@ -25,7 +27,7 @@ class Generate():
 
         return y
 
-    def gen_vert(xs):
+    def gen_vert(size, xs, img):
         pass
 
     def generate(size):
@@ -41,11 +43,11 @@ class Generate():
         ys = []
         curr_y = size - 2 #-2 to ensure one up
         while curr_y != 0: #generate conns
-            if random.random(img) > .5:
-                ys.append(Generate.gen_hor(ys))
+            if random.random() > .5:
+                ys.append(Generate.gen_hor(size, ys, img))
 
             else:
-                xs.append(Generate.gen_vert(xs))
+                xs.append(Generate.gen_vert(size, xs, img))
 
         img.save('imgs/' + str(size) * 2 + '.png')
         img.show()
