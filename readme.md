@@ -22,3 +22,6 @@ To solve a given maze, refer to the algorithm-specific instructions below
             - Example: DLUR - Down, left, up, right
      - Depth-First Search - dfs:
         -  `pipenv run python main.py -m [path\to\maze.png] -a dfs`
+
+    - Dijkstra - dijkstra
+        -   `pipenv run python main.py -m [path\to\maze.png] -a dijkstra`
