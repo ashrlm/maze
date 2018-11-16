@@ -9,7 +9,7 @@ class Generate():
         if sx > ex:
             sx, ex = ex, sx
 
-        for x in range(sx, ex):
+        for x in range(sx, ex+1):
             img.putpixel((x, y), (255, 255, 255))
 
     def gen_ver(img, x, sy, ey):
@@ -17,12 +17,14 @@ class Generate():
         if sy > ey:
             sy, ey = ey, sy
 
-        for y in range(sy, ey):
+        for y in range(sy, ey+1):
             img.putpixel((x, y), (255, 255, 255))
 
     def generate(size):
 
-        # TODO: Ensure that connections overlap but are not adjacent
+        # BUG: Ensure black ring around maze - Pri 1
+
+        # TODO: Ensure that connections overlap but are not adjacent - PRI 0
         #
         # Store list of connections as [[(s_x, s_y), (e_x, e_y)]]
         # When checking, loop over connections, and disallow if:
@@ -74,6 +76,8 @@ class Generate():
 
                 elif y + dist < size-1:
                     e_y = y + dist
+                    Generate.gen_ver(img, x, y, e_y)
+                    y = e_y
 
                 else:
                     i+=1
