@@ -31,8 +31,8 @@ class Generate():
         # (math.isclose(s_x, e_x, abs_tol=1) and s_x != e_x) or (math.isclose(s_y, e_y, abs_tol=1) and s_y != e_y)
 
         img = Image.new('RGB', [size] * 2)
-        s_pos = random.randrange(size)
-        e_pos = random.randrange(size)
+        s_pos = random.randint(1, size-1)
+        e_pos = random.randint(1, size-1)
         img.putpixel((s_pos, 0), (255, 255, 255))
         img.putpixel((s_pos, 1), (255, 255, 255))
         img.putpixel((e_pos, size-1), (255, 255, 255))
@@ -49,7 +49,7 @@ class Generate():
                 if x - dist > 0:
                     e_x = x - dist
 
-                elif x + dist < size:
+                elif x + dist < size-1:
                     e_x = x + dist
 
                 else:
