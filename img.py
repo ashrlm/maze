@@ -70,22 +70,26 @@ def is_conn(img, node, node_):
     if (node.x, node.y) == (node_.x, node_.y):
         return False #Same node
 
-
     if node.x == node_.x:
         for y in range(min(node.y, node_.y), max(node.y, node_.y)):
             if img[y][node.x] == (0, 0, 0):
+
                 return False
 
         return True
 
-    if node.y == node_.y:
+    elif node.y == node_.y:
         for x in range(min(node.x, node_.x), max(node.x, node_.x)):
             if img[node.y][x] == (0, 0, 0):
+
                 return False
 
         return True
 
+    return False
+
 def conn_filter(conns, nodes):
+
     new_conns = list(conns)[:]
 
     for conn in conns:
@@ -130,7 +134,7 @@ def conn_filter(conns, nodes):
 
     return new_conns
 
-def is_node(img, xy):
+def is_node(img, xy): #BUG HERE - Ex. 5,6
     x,y = xy
     if img[y][x] == (255, 255, 255):
 
@@ -145,7 +149,7 @@ def is_node(img, xy):
                     if not get_av_dirs(img, (x-1, y))[i]:
                         if av_dirs != get_av_dirs(img, (x+1, y)):
                             return True
-                if x < len(img[0]) - 2 and img[y][x+1] == (255, 255, 255):
+                if x < len(img[0]) - 1 and img[y][x+1] == (255, 255, 255):
                     if not get_av_dirs(img, (x+1,y ))[i]:
                         if av_dirs != get_av_dirs(img, (x-1, y)):
                             return True
@@ -153,7 +157,7 @@ def is_node(img, xy):
                     if not get_av_dirs(img, (x, y-1))[i]:
                         if av_dirs != get_av_dirs(img, (x, y+1)):
                             return True
-                if y < len(img) - 2 and img[y+1][x] == (255, 255, 255):
+                if y < len(img) - 1 and img[y+1][x] == (255, 255, 255):
                     if not get_av_dirs(img, (x, y+1))[i]:
                         if av_dirs != get_av_dirs(img, (x, y-1)):
                             return True
@@ -179,13 +183,16 @@ def parse(img_path):
     for i, node in enumerate(Node.nodes):
         for i_, node_ in enumerate(Node.nodes):
             if is_conn(pxs, node, node_):
+
                 new_conn = Connection(
                     (node, node_),
                     abs(node.x - node_.x))
 
                 node.connections.append(new_conn)
 
+
     conns = conn_filter(Connection.conns, Node.nodes)
+
     return Graph(pxs, Node.nodes, conns)
 
 def write_solution(conns, img_path, graph):
