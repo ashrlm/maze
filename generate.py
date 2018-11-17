@@ -21,9 +21,6 @@ class Generate():
             img.putpixel((x, y), (255, 255, 255))
 
     def generate(size):
-
-        # BUG: Ensure black ring around maze - Pri 1
-
         # TODO: Ensure that connections overlap but are not adjacent - PRI 0
         #
         # Store list of connections as [[(s_x, s_y), (e_x, e_y)]]
@@ -31,8 +28,8 @@ class Generate():
         # (math.isclose(s_x, e_x, abs_tol=1) and s_x != e_x) or (math.isclose(s_y, e_y, abs_tol=1) and s_y != e_y)
 
         img = Image.new('RGB', [size] * 2)
-        s_pos = random.randint(1, size-1)
-        e_pos = random.randint(1, size-1)
+        s_pos = random.randint(1, size-2)
+        e_pos = random.randint(1, size-2)
         img.putpixel((s_pos, 0), (255, 255, 255))
         img.putpixel((s_pos, 1), (255, 255, 255))
         img.putpixel((e_pos, size-1), (255, 255, 255))
