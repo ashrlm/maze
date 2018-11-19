@@ -47,6 +47,11 @@ class Generate():
 
     def generate(size):
 
+        # BUG: Potential for infinite loops
+        # BUG: Disallowed connections existing - AFAIK all vertical
+        # BUG: Connection jumping
+        # BUG: Multiple (>2) nodes where y in (0, size-1) - Likely linked to above
+
         Generate.size = size
 
         img = Image.new('RGB', [size] * 2)
@@ -98,7 +103,7 @@ class Generate():
                             mv_up = True
                             tmp = 0 #Remove later
                             while not Generate.allowed(((x, y), (s_pos, y))):
-                                if tmp > 1000: #Due to the chance of not being allowed to get to s_pos anywhere on curr y-axis
+                                if tmp > 100: #Due to the chance of not being allowed to get to s_pos anywhere on curr y-axis
                                     print("Sorry - Entered infinite loop. This will be fixed soon")
                                     print("Terminating now")
                                     quit(
