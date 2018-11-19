@@ -45,12 +45,7 @@ class Generate():
             Generate.allowed_ys = [y for y in range(1, Generate.size)]
             return Generate.allowed(conn)
 
-    def generate(size):
-
-        Generate.size = size
-        # BUG : Jumping between connections - Due to only checking allowedness of conn in gen_hor/gen_ver
-
-
+    def generate(size):    
         img = Image.new('RGB', [size] * 2)
         s_pos = random.randint(1, size-2)
         e_pos = random.randint(1, size-2)
@@ -62,52 +57,48 @@ class Generate():
         x = e_pos
         y = size - 2
         i = 0
-
-        while y != 0: #TODO: Rework this to check if allowed, and then draw/update pos
-            if i % 2 == 0 and x not in (1, size-2): #XCONN - Ensure not on border
-                dist = random.randint(2, size-3)
-                x = random.randint(min(x, abs(x-dist)), x)
-                if x - dist > 0:
-                    ex = x - dist
-
-                elif x + dist < size-1:
-                    ex = x + dist
-
+        
+        while y != 0:
+            if i % 2 == 0 and x not in (1, size-2): #XCONN
+                dist = random.randint(min(x, abs(x-dist)), x)
+                if x-dist > 0:
+                    if Generate.allowed(((x, y), (x-dist, y))):
+                        e_x = x - dist
+                
+                elif x + dist < size - 1:
+                    if Generate.allowed(((x, y), (x+dist, y))):
+                        e_x = x + dist
+                
                 else:
+                    i += 1
                     continue
-
-                Generate.gen_hor(img, y, x, ex)
-                x = ex
-
+                
+                Generate.gen_hor(img, y, x, e_x)
+                x = e_x
+            
             elif i % 2 != 0:
                 dist = random.randint(2, size-y)
                 if y - dist > 0:
-                    ey = y - dist
-
-                elif y - dist == 0: #Send to end
-                    if s_pos != x:
-                        Generate.gen_ver(img, x, y, y-dist+1) #Move nearly to top
-                        y = 1 #Ensure at top
-                        Generate.gen_hor(img, y, x, s_pos)
-
-                    else:
-                        Generate.gen_ver(img, x, y, y+dist)
-
-                    break
-
+                    if Generate.allowed(((x, y), (x, y-dist))):
+                        e_y = y-dist
+                
+                elif y - dist == 0: #Send to end:
+                    pass #TODO: Find way to send to end without risk of jumping due to not allowed
+                         #TODO: Make sure still checking allowed
+                
                 elif y + dist < size-1:
-                    ey = y + dist
-                    Generate.gen_ver(img, x, y, ey)
-                    y = ey
-
+                    if Generate.allowed(((x, y), (x, y+dist))):
+                        e_y = y + dist
+                
                 else:
-                    i+=1
+                    i += 1
                     continue
-
-                Generate.gen_ver(img, x, y, ey)
-                y = ey
-
+                
+                Generate.gen_ver(img, x, y, e_y)
+                y = s_y
+            
             i += 1
-
+        
+        
         img.save('imgs/' + str(size) * 2 + '.png')
         img.show()
