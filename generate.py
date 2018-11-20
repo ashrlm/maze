@@ -1,6 +1,7 @@
 
 from PIL import Image
 import random
+import math
 
 class Generate():
 
@@ -57,8 +58,9 @@ class Generate():
 
         img = Image.new('RGB', [size] * 2)
         s_pos = random.randint(1, size-2)
-        Generate.s_pos = s_pos
         e_pos = random.randint(1, size-2)
+        Generate.s_pos = s_pos
+        Generate.e_pos = e_pos
         img.putpixel((s_pos, 0), (255, 255, 255))
         img.putpixel((s_pos, 1), (255, 255, 255))
         img.putpixel((e_pos, size-1), (255, 255, 255))
