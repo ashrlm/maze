@@ -42,7 +42,7 @@ class Generate():
                     return True
 
         except AttributeError:
-            Generate.allowed_xs = [x for x in range(1, Generate.size)]
+            Generate.allowed_xs = [x for x in range(1, Generate.size) if not (math.isclose(x, Generate.s_pos, abs_tol=1) or math.isclose(x, Generate.e_pos, abs_tol=1))]
             Generate.allowed_ys = [y for y in range(1, Generate.size)]
             return Generate.allowed(conn)
 
