@@ -1,3 +1,4 @@
+
 from PIL import Image
 import random
 
@@ -56,6 +57,7 @@ class Generate():
 
         img = Image.new('RGB', [size] * 2)
         s_pos = random.randint(1, size-2)
+        Generate.s_pos = s_pos
         e_pos = random.randint(1, size-2)
         img.putpixel((s_pos, 0), (255, 255, 255))
         img.putpixel((s_pos, 1), (255, 255, 255))
@@ -103,7 +105,7 @@ class Generate():
                             mv_up = True
                             tmp = 0 #Remove later
                             while not Generate.allowed(((x, y), (s_pos, y))):
-                                if tmp > 100: #Due to the chance of not being allowed to get to s_pos anywhere on curr y-axis
+                                if tmp > 1.5 * size: #Due to the chance of not being allowed to get to s_pos anywhere on curr y-axis
                                     print("Sorry - Entered infinite loop. This will be fixed soon")
                                     print("Terminating now")
                                     quit(
