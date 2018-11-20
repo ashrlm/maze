@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from PIL import Image
 import random
 import math
@@ -20,7 +22,7 @@ class Generate():
         for y in range(sy, ey+1):
             img.putpixel((x, y), (255, 255, 255))
 
-    def allowed(conn): #BUG: DOES THIS EVER ACTUALLY FUCKING RETURN FALSE EVER??!!!???
+    def allowed(conn):
         # NOTE: conn = ((sx, sy), (ex, ey))
 
         try:
