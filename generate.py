@@ -1,4 +1,3 @@
-
 from PIL import Image
 import random
 import math
@@ -11,6 +10,7 @@ class Generate():
             sx, ex = ex, sx
 
         for x in range(sx, ex+1):
+            print(x, y)
             img.putpixel((x, y), (255, 255, 255))
 
     def gen_ver(img, x, sy, ey):
@@ -19,28 +19,38 @@ class Generate():
             sy, ey = ey, sy
 
         for y in range(sy, ey+1):
+            print(x, y)
             img.putpixel((x, y), (255, 255, 255))
 
-    def allowed(conn):
+    def allowed(conn): #BUG: DOES THIS EVER ACTUALLY FUCKING RETURN FALSE EVER??!!!???
         # NOTE: conn = ((sx, sy), (ex, ey))
+
         try:
             if conn[0][0] == conn[1][0]:
                 if conn[0][0] in Generate.allowed_ys:
-                    for x in range(conn[0][1]-1, conn[0][1]+2):
+                    for x in (conn[0][0]-1, conn[0][0]+1):
                         try:
                             Generate.allowed_xs.remove(x)
                         except ValueError:
                             pass
+
                     return True
+
+                else:
+                    return False
 
             elif conn[0][1] == conn[1][1]:
                 if conn[0][1] in Generate.allowed_xs:
-                    for y in range(conn[0][1]-1, conn[0][1]+2):
+                    for y in (conn[0][1]-1, conn[0][1]+1):
                         try:
                             Generate.allowed_ys.remove(y)
                         except ValueError:
                             pass
+
                     return True
+
+                else:
+                    return False
 
         except AttributeError:
             Generate.allowed_xs = [x for x in range(1, Generate.size) if not (math.isclose(x, Generate.s_pos, abs_tol=1) or math.isclose(x, Generate.e_pos, abs_tol=1))]
@@ -49,7 +59,7 @@ class Generate():
 
     def generate(size):
 
-        # BUG: Potential for infinite loops
+        # BUG: Infinite loop - Occurs after error in allowed .remove statement???
         # BUG: Disallowed connections existing - AFAIK all vertical
         # BUG: Connection jumping
         # BUG: Multiple (>2) nodes where y in (0, size-1) - Likely linked to above
@@ -76,10 +86,14 @@ class Generate():
                 if x-dist > 0:
                     if Generate.allowed(((x, y), (x-dist, y))):
                         e_x = x - dist
+                    else:
+                        continue
 
                 elif x + dist < size - 1:
                     if Generate.allowed(((x, y), (x+dist, y))):
                         e_x = x + dist
+                    else:
+                        continue
 
                 else:
                     i += 1
@@ -92,7 +106,7 @@ class Generate():
                 dist = random.randint(2, size-y)
                 if y - dist > 0:
                     if Generate.allowed(((x, y), (x, y-dist))):
-                        e_y = y-dist
+                        e_y = y - dist
 
                     else:
                         continue
@@ -116,6 +130,7 @@ class Generate():
                                 if mv_up:
                                     if y == 1:
                                         mv_up = False
+                                        tmp += 1
                                         continue
                                     y-=1
 
@@ -142,7 +157,7 @@ class Generate():
                 else:
                     continue
 
-                Generate.gen_ver(img, x, y, e_y) #BUG: e_y sometimes undefined - Due to
+                Generate.gen_ver(img, x, y, e_y)
                 y = e_y
 
             i += 1
