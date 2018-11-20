@@ -10,7 +10,6 @@ class Generate():
             sx, ex = ex, sx
 
         for x in range(sx, ex+1):
-            print(x, y)
             img.putpixel((x, y), (255, 255, 255))
 
     def gen_ver(img, x, sy, ey):
@@ -19,7 +18,6 @@ class Generate():
             sy, ey = ey, sy
 
         for y in range(sy, ey+1):
-            print(x, y)
             img.putpixel((x, y), (255, 255, 255))
 
     def allowed(conn): #BUG: DOES THIS EVER ACTUALLY FUCKING RETURN FALSE EVER??!!!???
@@ -27,7 +25,7 @@ class Generate():
 
         try:
             if conn[0][0] == conn[1][0]:
-                if conn[0][0] in Generate.allowed_ys:
+                if conn[0][0] in Generate.allowed_xs:
                     for x in (conn[0][0]-1, conn[0][0]+1):
                         try:
                             Generate.allowed_xs.remove(x)
@@ -40,7 +38,7 @@ class Generate():
                     return False
 
             elif conn[0][1] == conn[1][1]:
-                if conn[0][1] in Generate.allowed_xs:
+                if conn[0][1] in Generate.allowed_ys:
                     for y in (conn[0][1]-1, conn[0][1]+1):
                         try:
                             Generate.allowed_ys.remove(y)
@@ -59,10 +57,7 @@ class Generate():
 
     def generate(size):
 
-        # BUG: Infinite loop - Occurs after error in allowed .remove statement???
-        # BUG: Disallowed connections existing - AFAIK all vertical
-        # BUG: Connection jumping
-        # BUG: Multiple (>2) nodes where y in (0, size-1) - Likely linked to above
+        # BUG: Infinite loop - Very Very common
 
         Generate.size = size
 
