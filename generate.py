@@ -78,6 +78,64 @@ class Generate():
         i = 0
 
         while y != 0:
+
+            if hasattr(Generate, 'allowed_xs'):
+
+                if len(Generate.allowed_xs) < size / 2:
+                    if s_pos != x:
+                        if Generate.allowed(((x, y), (s_pos, y))):
+                            Generate.gen_hor(img, y, x, s_pos)
+                            x = s_pos
+
+                        else:
+                            mv_up = True
+                            while not Generate.allowed(((x, y), (s_pos, y))):
+                                if mv_up:
+                                    if y == 1:
+                                        mv_up = False
+                                        continue
+                                    y-=1
+
+                                else:
+                                    if y == size-2:
+                                        pass #Do something else - If this occurs, no way of getting from pos to s_pos
+                                             #Maybe try going 1 forward and re-doing this??
+                                    y += 1
+
+
+                            Generate.gen_hor(img, y, x, s_pos)
+
+                    Generate.gen_ver(img, x, y, 0)
+                    break
+
+                elif len(Generate.allowed_ys) < size / 2:
+                    if s_pos != x:
+                        if Generate.allowed(((x, y), (s_pos, y))):
+                            Generate.gen_hor(img, y, x, s_pos)
+                            x = s_pos
+
+                        else:
+                            mv_up = True
+                            while not Generate.allowed(((x, y), (s_pos, y))):
+                                if mv_up:
+                                    if y == 1:
+                                        mv_up = False
+                                        continue
+                                    y-=1
+
+                                else:
+                                    if y == size-2:
+                                        pass #Do something else - If this occurs, no way of getting from pos to s_pos
+                                             #Maybe try going 1 forward and re-doing this??
+                                    y += 1
+
+
+                            Generate.gen_hor(img, y, x, s_pos)
+
+                    Generate.gen_ver(img, x, y, 0)
+                    break
+
+
             if i % 2 == 0 and x not in (1, size-2): #XCONN
                 dist = random.randint(2, size)
                 if x-dist > 0:
@@ -102,6 +160,7 @@ class Generate():
                 x = e_x
 
             elif i % 2 != 0:
+
                 dist = random.randint(2, size-y)
                 if y - dist > 0:
                     if Generate.allowed(((x, y), (x, y-dist))):
@@ -119,16 +178,10 @@ class Generate():
 
                         else:
                             mv_up = True
-                            tmp = 0 #Remove later
                             while not Generate.allowed(((x, y), (s_pos, y))):
-                                if tmp > 1.5 * size: #Due to the chance of not being allowed to get to s_pos anywhere on curr y-axis
-                                    print("Sorry - Entered infinite loop. This will be fixed soon")
-                                    print("Terminating now")
-                                    quit()
                                 if mv_up:
                                     if y == 1:
                                         mv_up = False
-                                        tmp += 1
                                         continue
                                     y-=1
 
@@ -138,7 +191,6 @@ class Generate():
                                              #Maybe try going 1 forward and re-doing this??
                                     y += 1
 
-                                tmp += 1
 
                             Generate.gen_hor(img, y, x, s_pos)
 
@@ -146,7 +198,7 @@ class Generate():
                     break
 
                 elif y + dist < size-1:
-                    if Generate.allowed(((x, y), (x, y+dist))):
+                    if Generate.allowed(((x, y), (x, y+dist))): #inf loop in this condition
                         e_y = y + dist
 
                     else:
@@ -161,7 +213,6 @@ class Generate():
                 y = e_y
 
             i += 1
-            print(i)
 
         img.save('imgs/' + str(size) * 2 + '.png')
         img.show()
