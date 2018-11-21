@@ -84,12 +84,14 @@ class Generate():
                     if Generate.allowed(((x, y), (x-dist, y))):
                         e_x = x - dist
                     else:
+                        i += 1
                         continue
 
                 elif x + dist < size - 1:
                     if Generate.allowed(((x, y), (x+dist, y))):
                         e_x = x + dist
                     else:
+                        i += 1
                         continue
 
                 else:
@@ -106,9 +108,10 @@ class Generate():
                         e_y = y - dist
 
                     else:
+                        i += 1
                         continue
 
-                elif y - dist == 0: #Send to end:
+                elif y - dist == 0: #Send to end
                     if s_pos != x:
                         if Generate.allowed(((x, y), (s_pos, y))):
                             Generate.gen_hor(img, y, x, s_pos)
@@ -121,9 +124,7 @@ class Generate():
                                 if tmp > 1.5 * size: #Due to the chance of not being allowed to get to s_pos anywhere on curr y-axis
                                     print("Sorry - Entered infinite loop. This will be fixed soon")
                                     print("Terminating now")
-                                    quit(
-
-                                    )
+                                    quit()
                                 if mv_up:
                                     if y == 1:
                                         mv_up = False
@@ -149,15 +150,18 @@ class Generate():
                         e_y = y + dist
 
                     else:
+                        i += 1
                         continue
 
                 else:
+                    i += 1
                     continue
 
                 Generate.gen_ver(img, x, y, e_y)
                 y = e_y
 
             i += 1
+            print(i)
 
         img.save('imgs/' + str(size) * 2 + '.png')
         img.show()
