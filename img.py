@@ -2,6 +2,7 @@
 
 from PIL import Image
 import random
+import os
 
 class Node():
 
@@ -134,7 +135,7 @@ def conn_filter(conns, nodes):
 
     return new_conns
 
-def is_node(img, xy): #BUG HERE - Ex. 5,6
+def is_node(img, xy):
     x,y = xy
     if img[y][x] == (255, 255, 255):
 
@@ -224,5 +225,5 @@ def write_solution(conns, img_path, graph):
 
     img_out = Image.new(img.mode, img.size)
     img_out.putdata(new_pxs)
-    img_out.save('imgs/solved' + img_path[img_path.index('/'):])
+    img_out.save('imgs/solved' + os.path.basename(img_path.replace('/', '\\')))
     img_out.show()
