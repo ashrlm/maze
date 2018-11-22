@@ -59,8 +59,6 @@ class Generate():
 
     def generate(size):
 
-        # BUG: Infinite loop - Very Very common
-
         Generate.size = size
 
         img = Image.new('RGB', [size] * 2)
