@@ -222,59 +222,6 @@ def dfs(graph):
 
     return conns
 
-def dijkstra(graph):
-
-    curr_node = graph.start
-    for node in graph.nodes:
-        node.avaliable = list(node.connections)
-        node.previous = None
-        node.cost = float('inf')
-
-    graph.start.cost = 0
-
-    while curr_node != graph.end:
-        if curr_node.avaliable == []:
-            new_node = curr_node.previous
-            curr_node.previous = None
-            curr_node = new_node
-            continue
-
-        next_conn = None
-        next_node = None
-        next_cost = float('inf')
-        for conn in curr_node.avaliable:
-            if conn.nodes[0] == curr_node:
-                if curr_node.cost + conn.cost < conn.nodes[1].cost:
-                    conn.nodes[1].cost = curr_node.cost + conn.cost
-
-                if conn.nodes[1].cost < next_cost:
-                    next_conn = conn
-                    next_node = conn.nodes[1]
-                    next_cost = conn.nodes[1].cost
-
-            else:
-                if curr_node.cost + conn.cost < conn.nodes[0].cost:
-                    conn.nodes[0].cost = curr_node.cost + conn.cost
-
-                if conn.nodes[0].cost < next_cost:
-                    next_conn = conn
-                    next_node = conn.nodes[0]
-                    next_cost = conn.nodes[0].cost
-
-        rm_conn(next_node.avaliable, next_conn)
-        rm_conn(curr_node.avaliable, next_conn)
-
-        next_node.previous = curr_node
-        curr_node = next_node
-
-    conns = []
-    for node in graph.nodes:
-        if node.previous != None:
-            if node.previous.x == node.x:
-                conns.append(img.Connection((node, node.previous), abs(node.y - node.previous.y)))
-
-            else:
-                conns.append(img.Connection((node, node.previous), abs(node.x - node.previous.x)))
-
-    return conns
-
+ # TODO: Rewrite dijkstra
+ # Required: Store .previous as a list allowing it to backtrack multiple to prevent None Error
+ # Methodology: Start at Start, check to backtrack, loop over all in avaliable, add/update cost/previous of each, go to nearest one, loop

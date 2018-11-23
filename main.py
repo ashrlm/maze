@@ -64,11 +64,11 @@ def __main__():
             quit()
 
     elif parsed['a'] == 'dijkstra':
-        try:
-            solved = solve.dijkstra(maze)
+    try:
+        solved = solve.dijkstra(maze)
         except AttributeError:
-            print("Unsolvable maze")
-            quit()
+            print("Sorry, Dijkstra was removed - Re-added soon")
+    #        quit()
 
     elif parsed['a'] == 'dfs':
         try:
