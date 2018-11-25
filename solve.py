@@ -1,5 +1,6 @@
 import random
 import img
+import copy
 
 def conn_node(conn, node):
     if conn.nodes[0] == node: #Check which one index of the conn our node is at
@@ -223,5 +224,49 @@ def dfs(graph):
     return conns
 
  # TODO: Rewrite dijkstra
- # Required: Store .previous as a list allowing it to backtrack multiple to prevent None Error
+ # Required: Store .previous as a list allowing it to backtrack multiple at once, skipping Nones, to prevent None Error
  # Methodology: Start at Start, check to backtrack, loop over all in avaliable, add/update cost/previous of each, go to nearest one, loop
+
+def dijkstra(graph):
+    curr_node = graph.Start
+
+    for node in graph.nodes: #Setup costs of nodes
+        node.cost = float('inf')
+    graph.start.cost = 0
+
+    while curr_node != graph.end:
+
+        if curr_node.avaliable == []:
+            pass #TODO: Backtrack
+
+        min_cost = float('inf')
+        min_node = None
+
+        for conn in curr_node.avaliable: #Loop over all possible
+            if conn.nodes[0] == curr_node:
+                if curr_node.cost + conn.cost < conn.nodes[1].cost:
+                    conn.nodes[1].cost = curr_node.cost + conn.cost #Update cost - swapping
+
+                if conn.nodes[1].cost < min_cost:
+                    min_cost = conn.nodes[1].cost #Update min_cost to get nearest node
+                    min_node = conn.nodes[1] #Update next node
+
+            else:
+                if curr_node.cost + conn.cost < conn.nodes[1].cost:
+                    conn.nodes[0].cost = curr_node.cost + conn.cost #Update cost - swapping
+
+                if conn.nodes[0].cost < min_cost:
+                    min_cost = conn.nodes[0].cost #Update min_cost to get nearest node
+                    min_node = conn.nodes[0] #Update next node
+
+        new_node = copy.deepcopy(min_node) #TODO: Copy this instead of creating ref
+        new_node.previous = curr_node.previous
+        new_node.previous.append(curr_node)
+        curr_node = new_node
+
+    conns = []
+    for node in graph.end.previous:
+        if node:
+            conns.append(img.Connection((node, graph.end), 0))
+
+    return conns
