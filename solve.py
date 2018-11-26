@@ -237,7 +237,11 @@ def dijkstra(graph):
     while curr_node != graph.end:
 
         if curr_node.avaliable == []:
-            pass #TODO: Backtrack
+            next_node = curr_node.previous.pop()
+            while next_node == None:
+                next_node = curr_node.previous.pop()
+
+            curr_node = next_node
 
         min_cost = float('inf')
         min_node = None
