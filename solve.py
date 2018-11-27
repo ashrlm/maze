@@ -228,11 +228,14 @@ def dfs(graph):
  # Methodology: Start at Start, check to backtrack, loop over all in avaliable, add/update cost/previous of each, go to nearest one, loop
 
 def dijkstra(graph):
-    curr_node = graph.Start
+    graph.start.previous = [None]
+    curr_node = graph.start
 
     for node in graph.nodes: #Setup costs of nodes
         node.cost = float('inf')
+        node.avaliable = list(node.connections)
     graph.start.cost = 0
+   
 
     while curr_node != graph.end:
 
