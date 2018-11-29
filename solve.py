@@ -266,9 +266,14 @@ def dijkstra(graph):
                     min_cost = conn.nodes[0].cost #Update min_cost to get nearest node
                     min_node = conn.nodes[0] #Update next node
 
-        new_node = copy.deepcopy(min_node) #TODO: Copy this instead of creating ref
+        new_node = copy.deepcopy(min_node)
         new_node.previous = curr_node.previous
         new_node.previous.append(curr_node)
+
+        tmp_conn = img.Connection((new_node, curr_node), 0)
+        rm_conn(curr_node.avaliable, tmp_conn)
+        rm_conn(new_node.avaliable, tmp_conn)
+
         curr_node = new_node
 
     conns = []
