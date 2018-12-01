@@ -39,7 +39,7 @@ def parse_args():
 
     return parsed
 
-def __main__():
+def main():
     parsed = parse_args()
     try:
         size = parsed['s']
@@ -67,7 +67,7 @@ def __main__():
         try:
             solved = solve.dijkstra(maze)
         except AttributeError:
-            print("Unsolvable")
+            print("Unsolvable maze")
             quit()
 
     elif parsed['a'] == 'dfs':
@@ -83,4 +83,4 @@ def __main__():
     img.write_solution(solved, parsed['m'], maze)
 
 if __name__ == '__main__':
-    __main__()
+    main()
