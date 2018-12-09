@@ -184,8 +184,23 @@ def dfs(graph):
     return conn_filter(list(node_conns.values())) #Only return filtered connections
 
 def rm_conn(conns, conn_rm):
+
+    conn_rm_data = (
+        conn_rm.nodes[0].x,
+        conn_rm.nodes[0].y,
+        conn_rm.nodes[1].x,
+        conn_rm.nodes[1].y
+    )
+
     for conn in conns:
-        if conn.nodes in (conn_rm.nodes, conn_rm.nodes[::-1]):
+
+        conn_data = (
+            conn.nodes[0].x,
+            conn.nodes[0].y,
+            conn.nodes[1].x,
+            conn.nodes[1].y
+        )
+        if conn_data == conn_rm_data:
             try:
                 conns.remove(conn)
             except ValueError:
@@ -223,10 +238,6 @@ def dfs(graph):
 
     return conns
 
- # TODO: Rewrite dijkstra
- # Required: Store .previous as a list allowing it to backtrack multiple at once, skipping Nones, to prevent None Error
- # Methodology: Start at Start, check to backtrack, loop over all in avaliable, add/update cost/previous of each, go to nearest one, loop
-
 def dijkstra(graph):
     graph.start.previous = [None]
     curr_node = graph.start
@@ -235,22 +246,25 @@ def dijkstra(graph):
         node.cost = float('inf')
         node.avaliable = list(node.connections)
     graph.start.cost = 0
-   
+
 
     while curr_node != graph.end:
 
-        if curr_node.avaliable == []:
+        print(curr_node.x, curr_node.y, curr_node.avaliable)
+
+        if len(curr_node.avaliable) == len([]):
             next_node = curr_node.previous.pop()
-            while next_node == None:
+            while next_node == None or next_node.avaliable == []:
                 next_node = curr_node.previous.pop()
 
             curr_node = next_node
+            #TODO: Remove avaliable from this
 
         min_cost = float('inf')
         min_node = None
 
         for conn in curr_node.avaliable: #Loop over all possible
-            if conn.nodes[0] == curr_node:
+            if (conn.nodes[0].x, conn.nodes[0].y) == (curr_node.x, curr_node.y):
                 if curr_node.cost + conn.cost < conn.nodes[1].cost:
                     conn.nodes[1].cost = curr_node.cost + conn.cost #Update cost - swapping
 
@@ -266,7 +280,8 @@ def dijkstra(graph):
                     min_cost = conn.nodes[0].cost #Update min_cost to get nearest node
                     min_node = conn.nodes[0] #Update next node
 
-        new_node = copy.deepcopy(min_node)
+
+        new_node = copy.copy(min_node)
         new_node.previous = curr_node.previous
         new_node.previous.append(curr_node)
 
