@@ -240,6 +240,7 @@ def dfs(graph):
 
 def dijkstra(graph): #BUG: This will fail for certain mazes (Decided 1515 is unsolvable, hangs on 7070)
     curr_node = graph.start
+    curr_node.previous = []
 
     for node in graph.nodes: #Setup costs of nodes
         node.cost = float('inf')
@@ -252,13 +253,17 @@ def dijkstra(graph): #BUG: This will fail for certain mazes (Decided 1515 is uns
             next_node = curr_node
             while len(next_node.avaliable) == 0:
                 next_node = next_node.previous.pop()
-                
-            curr_node = next_node.previous.pop()
+                print(next_node.x, next_node.y, len(next_node.avaliable))
+                if len(next_node.avaliable) > 0:
+                    print(1)
+                    curr_node = next_node
+                    break
+
             rm_conn(curr_node.avaliable, img.Connection(
                 (curr_node,
                 next_node),
                 0 #Distance does not matter
-            ))
+            )) #I don't think this is working... we might need to have a closer look at this - Yup its causing loops
 
         min_cost = float('inf')
         min_node = None
@@ -281,6 +286,7 @@ def dijkstra(graph): #BUG: This will fail for certain mazes (Decided 1515 is uns
                     min_node = conn.nodes[0] #Update next node
 
         new_node = copy.copy(min_node)
+        print(curr_node.x, curr_node.y, new_node.x, new_node.y)
         new_node.previous = curr_node.previous
         new_node.previous.append(curr_node)
 
@@ -296,5 +302,5 @@ def dijkstra(graph): #BUG: This will fail for certain mazes (Decided 1515 is uns
         if node:
             conns.append(img.Connection((node, prev_node), 0))
             prev_node = node
-    
+
     return conns
