@@ -238,8 +238,7 @@ def dfs(graph):
 
     return conns
 
-def dijkstra(graph):
-    graph.start.previous = [None]
+def dijkstra(graph): #BUG: This will fail for certain mazes (Decided 1515 is unsolvable, hangs on 7070)
     curr_node = graph.start
 
     for node in graph.nodes: #Setup costs of nodes
@@ -247,18 +246,19 @@ def dijkstra(graph):
         node.avaliable = list(node.connections)
     graph.start.cost = 0
 
+    while curr_node.y != graph.end.y:
 
-    while curr_node != graph.end:
-
-        print(curr_node.x, curr_node.y, curr_node.avaliable)
-
-        if len(curr_node.avaliable) == len([]):
-            next_node = curr_node.previous.pop()
-            while next_node == None or next_node.avaliable == []:
-                next_node = curr_node.previous.pop()
-
-            curr_node = next_node
-            #TODO: Remove avaliable from this
+        while len(curr_node.avaliable) == 0:
+            next_node = curr_node
+            while len(next_node.avaliable) == 0:
+                next_node = next_node.previous.pop()
+                
+            curr_node = next_node.previous.pop()
+            rm_conn(curr_node.avaliable, img.Connection(
+                (curr_node,
+                next_node),
+                0 #Distance does not matter
+            ))
 
         min_cost = float('inf')
         min_node = None
@@ -280,7 +280,6 @@ def dijkstra(graph):
                     min_cost = conn.nodes[0].cost #Update min_cost to get nearest node
                     min_node = conn.nodes[0] #Update next node
 
-
         new_node = copy.copy(min_node)
         new_node.previous = curr_node.previous
         new_node.previous.append(curr_node)
@@ -291,9 +290,11 @@ def dijkstra(graph):
 
         curr_node = new_node
 
-    conns = []
-    for node in graph.end.previous:
+    conns = [img.Connection((curr_node.previous[-1], graph.end), 0)]
+    prev_node = graph.end
+    for node in curr_node.previous:
         if node:
-            conns.append(img.Connection((node, graph.end), 0))
-
+            conns.append(img.Connection((node, prev_node), 0))
+            prev_node = node
+    
     return conns

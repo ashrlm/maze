@@ -78,7 +78,7 @@ def main():
             quit()
 
     else:
-        raise ValueError('Unknown Algorithm (random_move, dir_pri, dfs)')
+        raise ValueError('Unknown Algorithm (random_move, dir_pri, dfs, dijkstra)')
 
     img.write_solution(solved, parsed['m'], maze)
 
