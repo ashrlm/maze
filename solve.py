@@ -200,7 +200,7 @@ def rm_conn(conns, conn_rm):
             conn.nodes[1].x,
             conn.nodes[1].y
         )
-        if conn_data == conn_rm_data:
+        if sorted(conn_data) == sorted(conn_rm_data):
             try:
                 conns.remove(conn)
             except ValueError:
@@ -253,17 +253,21 @@ def dijkstra(graph): #BUG: This will fail for certain mazes (Decided 1515 is uns
             next_node = curr_node
             while len(next_node.avaliable) == 0:
                 next_node = next_node.previous.pop()
-                print(next_node.x, next_node.y, len(next_node.avaliable))
                 if len(next_node.avaliable) > 0:
-                    print(1)
+                    old_node = curr_node
                     curr_node = next_node
                     break
 
-            rm_conn(curr_node.avaliable, img.Connection(
+            rm_conn(old_node.avaliable, img.Connection(
                 (curr_node,
-                next_node),
+                old_node),
                 0 #Distance does not matter
-            )) #I don't think this is working... we might need to have a closer look at this - Yup its causing loops
+            ))
+            rm_conn(curr_node.avaliable, img.Connection(
+                (old_node,
+                curr_node),
+                0 #Distance does not matter
+            ))
 
         min_cost = float('inf')
         min_node = None
@@ -286,7 +290,6 @@ def dijkstra(graph): #BUG: This will fail for certain mazes (Decided 1515 is uns
                     min_node = conn.nodes[0] #Update next node
 
         new_node = copy.copy(min_node)
-        print(curr_node.x, curr_node.y, new_node.x, new_node.y)
         new_node.previous = curr_node.previous
         new_node.previous.append(curr_node)
 
