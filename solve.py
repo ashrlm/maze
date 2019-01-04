@@ -185,22 +185,27 @@ def dfs(graph):
 
 def rm_conn(conns, conn_rm):
 
-    conn_rm_data = (
+    conn_rm_data_x = sorted((
         conn_rm.nodes[0].x,
+        conn_rm.nodes[1].x
+    ))
+    conn_rm_data_y = sorted((
         conn_rm.nodes[0].y,
-        conn_rm.nodes[1].x,
         conn_rm.nodes[1].y
-    )
+    ))
 
     for conn in conns:
 
-        conn_data = (
+        conn_data_x = sorted((
             conn.nodes[0].x,
+            conn.nodes[1].x
+        ))
+        conn_data_y = sorted((
             conn.nodes[0].y,
-            conn.nodes[1].x,
             conn.nodes[1].y
-        )
-        if sorted(conn_data) == sorted(conn_rm_data):
+        ))
+
+        if (conn_data_x, conn_data_y) == (conn_rm_data_x, conn_rm_data_y):
             try:
                 conns.remove(conn)
             except ValueError:
