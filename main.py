@@ -66,8 +66,8 @@ def main():
     elif parsed['a'] == 'dijkstra':
         try:
             solved = solve.dijkstra(maze)
-        except AttributeError:
-            print("Unsolvable maze" + 1)
+        except IndexError:
+            print("Unsolvable maze")
             quit()
 
     elif parsed['a'] == 'dfs':
