@@ -1,6 +1,5 @@
 import random
 import img
-import copy
 
 def conn_node(conn, node):
     if conn.nodes[0] == node: #Check which one index of the conn our node is at
@@ -277,33 +276,47 @@ def dijkstra(graph): #BUG: This will fail for certain mazes (Decided 1515 is uns
         min_cost = float('inf')
         min_node = None
 
-        for conn in curr_node.avaliable: #Loop over all possible
+        for conn in curr_node.connections: #Loop over all possible
             if (conn.nodes[0].x, conn.nodes[0].y) == (curr_node.x, curr_node.y):
                 if curr_node.cost + conn.cost < conn.nodes[1].cost:
-                    conn.nodes[1].cost = curr_node.cost + conn.cost #Update cost - swapping
+                    conn.nodes[1].cost = curr_node.cost + conn.cost #Update cost of next_node
 
-                if conn.nodes[1].cost < min_cost:
+                if conn.nodes[1].cost < min_cost and conn in curr_node.avaliable:
                     min_cost = conn.nodes[1].cost #Update min_cost to get nearest node
                     min_node = conn.nodes[1] #Update next node
+                    #Trim and update curr_node.previous
+                    try:
+                        unneeded_nodes_i = curr_node.previous.index(conn.nodes[1]) #BUG: This is constantly returning errors - Reason for not shortest path
+                        curr_node.previous = curr_node.previous[:unneeded_nodes_i]
+                        curr_node.previous.append(conn.nodes[1])
+                    except ValueError:
+                        pass
 
-            else:
+            elif (conn.nodes[1].x, conn.nodes[1].y) == (curr_node.x, curr_node.y):
                 if curr_node.cost + conn.cost < conn.nodes[1].cost:
                     conn.nodes[0].cost = curr_node.cost + conn.cost #Update cost - swapping
+                    #Trim and update curr_node.previous
+                    try:
+                        unneeded_nodes_i = curr_node.previous.index(conn.nodes[0]) #BUG: This is constantly returning errors - Reason for not shortest path
+                        curr_node.previous = curr_node.previous[:unneeded_nodes_i]
+                        curr_node.previous.append(conn.nodes[0])
+                    except ValueError:
+                        pass
 
-                if conn.nodes[0].cost < min_cost:
+                if conn.nodes[0].cost < min_cost and conn in curr_node.avaliable:
                     min_cost = conn.nodes[0].cost #Update min_cost to get nearest node
                     min_node = conn.nodes[0] #Update next node
 
-        new_node = copy.copy(min_node)
-        new_node.previous = curr_node.previous
-        new_node.previous.append(curr_node)
+        min_node.previous = curr_node.previous
+        min_node.previous.append(curr_node)
 
-        tmp_conn = img.Connection((new_node, curr_node), 0)
+        tmp_conn = img.Connection((min_node, curr_node), 0)
         rm_conn(curr_node.avaliable, tmp_conn)
-        rm_conn(new_node.avaliable, tmp_conn)
+        rm_conn(min_node.avaliable, tmp_conn)
 
-        curr_node = new_node
+        curr_node = min_node
 
+    #Generate the list of connections needed to draw the result
     conns = [img.Connection((curr_node.previous[-1], graph.end), 0)]
     prev_node = graph.end
     for node in curr_node.previous:
