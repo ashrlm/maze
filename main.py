@@ -11,26 +11,26 @@ import subprocess
 def parse_args():
     maze_path = None
     parser = argparse.ArgumentParser(description="Solve a given maze")
-    parser.add_argument('-s', help='Size of maze to generate. (Also cue for generation)')
-    parser.add_argument('-m', help='Path of maze to solve')
-    parser.add_argument('-a', help="Algorithm to use for solving")
-    parser.add_argument('-d', help='Directions if using dir_pri mode')
+    parser.add_argument('-size', help='Size of maze to generate. (Also cue for generation)')
+    parser.add_argument('-maze', help='Path of maze to solve')
+    parser.add_argument('-algorithm', help="Algorithm to use for solving")
+    parser.add_argument('-dir_pri', help='Directions if using dir_pri mode')
 
     parsed = {}
 
     args = parser.parse_args(sys.argv[1:])
-    if args.s:
-        parsed['s'] = int(args.s)
+    if args.size:
+        parsed['s'] = int(args.size)
         return parsed
-    if args.m:
-        parsed['m'] = args.m.lower()
+    if args.maze:
+        parsed['m'] = args.maze.lower()
     else:
         raise ValueError('Maze path required')
-    if args.a:
-        parsed['a'] = args.a.lower()
-        if args.a == 'dir_pri':
-            if args.d:
-                parsed['d'] = args.d.lower()
+    if args.algorithm:
+        parsed['a'] = args.algorithm.lower()
+        if args.algorithm == 'dir_pri':
+            if args.dir_pri:
+                parsed['d'] = args.dir_pri.lower()
             else:
                 parsed['d'] = 'dlur'
 
